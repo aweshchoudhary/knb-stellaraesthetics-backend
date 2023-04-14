@@ -20,6 +20,7 @@ const {
   deleteActivity,
   getActivitiesByCardId,
   getActivityById,
+  getAllActivities,
 } = require("../controllers/activity_controller");
 const {
   addNote,
@@ -35,6 +36,14 @@ const {
   updateLabel,
   deleteLabel,
 } = require("../controllers/label_controller");
+const {
+  createClient,
+  getClients,
+  getClientById,
+  updateClient,
+  deleteClient,
+} = require("../controllers/clients_controller");
+
 const upload = require("../apps/multer");
 
 // STAGE ENDPOINTS
@@ -53,23 +62,34 @@ router.delete("/card", deleteCard);
 router.put("/card", updateCard);
 router.put("/update-card-stage", updateCardStage);
 
+// NOTE ENDPOINTS
 router.post("/note/add", addNote);
 router.put("/note/update/:id", updateNote);
 router.delete("/note/delete/:id", deleteNote);
 router.get("/note/get-notes/:cardId", getNotesByCardId);
 router.get("/note/get-note/:id", getNotesById);
 
+// ACTIVITY ENDPOINTS
 router.post("/activity/add", addActivity);
 router.put("/activity/update/:id", updateActivity);
 router.delete("/activity/delete/:id", deleteActivity);
+router.get("/activity/get-all-activities", getAllActivities);
 router.get("/activity/get-activities/:cardId", getActivitiesByCardId);
 router.get("/activity/get-activity/:id", getActivityById);
 
+// LABEL ENDPOINTS
 router.post("/label/add", createLabel);
 router.put("/label/update/:id", updateLabel);
 router.delete("/label/delete/:id", deleteLabel);
 router.get("/label/get-labels", getLabels);
 router.get("/label/get-label/:id", getLabelById);
+
+// CLIENT ENDPOINTS
+router.post("/client/add", createClient);
+router.put("/client/update/:id", updateClient);
+router.delete("/client/delete/:id", deleteClient);
+router.get("/client/get-clients", getClients);
+router.get("/client/get-client/:id", getClientById);
 
 // router.post("/file/add", upload.single("file"), addFile);
 // router.put("/file/download", getFile);
