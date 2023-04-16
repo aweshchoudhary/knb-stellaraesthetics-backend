@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 
 const ClientDetails_Schema = new mongoose.Schema({
   company: String,
-  title: String,
   contactPerson: String,
   mobile: String,
   whatsapp: String,
@@ -10,7 +9,6 @@ const ClientDetails_Schema = new mongoose.Schema({
 });
 
 ClientDetails_Schema.index({
-  title: "text",
   company: "text",
   contactPerson: "text",
   mobile: "text",
