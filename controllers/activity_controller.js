@@ -2,12 +2,10 @@ const Activity_Model = require("../models/Activity_Model");
 const asyncHandler = require("express-async-handler");
 
 const getAllActivities = asyncHandler(async (req, res) => {
-  const { markDone } = req.query;
-  const activities = await Activity_Model.find({
-    markDone: markDone || false,
-  }).sort({
+  const activities = await Activity_Model.find({ ...req.query }).sort({
     startDate: "desc",
   });
+  // console.log(activities);
   res.status(200).json({ data: activities });
 });
 const getActivitiesByCardId = asyncHandler(async (req, res) => {

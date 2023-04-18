@@ -13,6 +13,7 @@ const getClients = asyncHandler(async (req, res) => {
   let convertedSort = {};
   let clientsData;
 
+  const total = await Client_Model.count({});
   if (sorting) {
     const sortArr = JSON.parse(sorting);
     sortArr.forEach((item) => {
@@ -33,10 +34,10 @@ const getClients = asyncHandler(async (req, res) => {
       .limit(size)
       .sort(convertedSort);
   }
-
-  res
-    .status(200)
-    .json({ message: "client has been created", data: clientsData });
+  res.status(200).json({
+    data: clientsData,
+    meta: { total },
+  });
 });
 const getClientById = asyncHandler(async (req, res) => {
   const { id } = req.params;

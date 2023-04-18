@@ -13,6 +13,7 @@ const {
   deleteCard,
   updateCard,
   updateCardStage,
+  getCardsByStage,
 } = require("../controllers/card_controller");
 const {
   addActivity,
@@ -55,8 +56,8 @@ router.put("/stage/:id", updateStage);
 router.delete("/stage/:position", deleteStage);
 
 // CARD ENDPOINTS
-router.get("/get-card", getCard);
-router.get("/get-cards", getCard);
+router.get("/get-card/:id", getCard);
+router.get("/get-cards", getCardsByStage);
 router.post("/card", createCard);
 router.delete("/card", deleteCard);
 router.put("/card", updateCard);

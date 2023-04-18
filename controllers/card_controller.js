@@ -19,7 +19,7 @@ const createCard = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Card has been created", data: card });
 });
 const getCard = asyncHandler(async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
   const card = await Card_Model.findById(id);
   res.status(200).json({ data: card });
 });
