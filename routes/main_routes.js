@@ -48,20 +48,20 @@ const {
 const upload = require("../apps/multer");
 
 // STAGE ENDPOINTS
-router.post("/stage", createStage);
-router.get("/get-stages", getAllStages);
-router.get("/get-stage", getStageById);
+router.post("/stage/add", createStage);
+router.get("/stage/get-stages", getAllStages);
+router.get("/stage/get-stage", getStageById);
 router.put("/stage/reorder", reorderStages);
-router.put("/stage/:id", updateStage);
+router.put("/stage/update/:id", updateStage);
 router.delete("/stage/:position", deleteStage);
 
 // CARD ENDPOINTS
-router.get("/get-card/:id", getCard);
-router.get("/get-cards", getCardsByStage);
-router.post("/card", createCard);
-router.delete("/card", deleteCard);
-router.put("/card", updateCard);
-router.put("/update-card-stage", updateCardStage);
+router.get("/card/get-card/:id", getCard);
+router.get("/card/get-cards", getCardsByStage);
+router.post("/card/add", createCard);
+router.delete("/card/delete/:id", deleteCard);
+router.put("/card/update/:id", updateCard);
+router.put("/card/card-stage", updateCardStage);
 
 // NOTE ENDPOINTS
 router.post("/note/add", addNote);

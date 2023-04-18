@@ -1,9 +1,0 @@
-name: push_cd
-
-on:
-  push:
-    branches: ["main"]
-
-jobs:
-  build:
-    runs-on: self-hosted

@@ -55,12 +55,13 @@ const getCardsByStage = asyncHandler(async (req, res) => {
   res.status(200).json({ data: cards });
 });
 const updateCard = asyncHandler(async (req, res) => {
-  const { id, update } = req.body;
+  const { id } = req.params;
+  const { update } = req.body;
   await Card_Model.findByIdAndUpdate(id, { ...update });
   res.status(200).json({ message: "Card Has Been Updated" });
 });
 const deleteCard = asyncHandler(async (req, res) => {
-  const { id } = req.query;
+  const { id } = req.params;
   await Card_Model.findByIdAndDelete(id);
   res.status(200).json({ message: "Card Has Been Deleted" });
 });
