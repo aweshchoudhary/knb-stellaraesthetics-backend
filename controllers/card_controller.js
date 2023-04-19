@@ -11,6 +11,7 @@ const createCard = asyncHandler(async (req, res) => {
         _id: req.body.stage,
       },
     ],
+    currentStage: req.body.stage,
   });
   const card = await newCard.save();
   await Stage_Model.findByIdAndUpdate(req.body.stage, {
@@ -23,6 +24,11 @@ const getCard = asyncHandler(async (req, res) => {
   const card = await Card_Model.findById(id);
   res.status(200).json({ data: card });
 });
+const getCardsByStage = asyncHandler(async (req, res) => {
+  const { stageId } = req.params;
+  const cards = await Card_Model.find({ currentStage: stageId });
+  res.status(200).json({ data: cards });
+});
 const updateCardStage = asyncHandler(async (req, res) => {
   const { newStageId, prevStageId, cardId } = req.body;
   // Remove card id from previous stage
@@ -32,6 +38,7 @@ const updateCardStage = asyncHandler(async (req, res) => {
   // add card id to new stage
   await Stage_Model.findByIdAndUpdate(newStageId, {
     $push: { items: cardId },
+    currentStage: newStageId,
   });
   // update card stage
   const card = await Card_Model.findById(cardId);
@@ -48,11 +55,6 @@ const updateCardStage = asyncHandler(async (req, res) => {
   await card.save();
 
   res.status(200).json({ message: "stage has been changed" });
-});
-const getCardsByStage = asyncHandler(async (req, res) => {
-  const { stage } = req.query;
-  const cards = await Card_Model.find({ stage });
-  res.status(200).json({ data: cards });
 });
 const updateCard = asyncHandler(async (req, res) => {
   const { id } = req.params;

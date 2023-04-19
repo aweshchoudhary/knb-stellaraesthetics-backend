@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Note_Schema = new mongoose.Schema(
   {
     body: String,
-    cardId: String,
+    cardId: { type: String, required: true },
   },
   { timestamps: true }
 );

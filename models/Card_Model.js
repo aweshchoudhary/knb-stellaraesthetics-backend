@@ -18,6 +18,7 @@ const Card_Schema = new mongoose.Schema(
     title: String,
     value: Value_Schema,
     stages: [Stage_Schema],
+    currentStage: String,
     label: String,
     expectedClosingDate: Date,
   },

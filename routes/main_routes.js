@@ -70,7 +70,7 @@ router.delete("/stage/:position", deleteStage);
 
 // CARD ENDPOINTS
 router.get("/card/get-card/:id", getCard);
-router.get("/card/get-cards", getCardsByStage);
+router.get("/card/get-cards/:stageId", getCardsByStage);
 router.post("/card/add", createCard);
 router.delete("/card/delete/:id", deleteCard);
 router.put("/card/update/:id", updateCard);
