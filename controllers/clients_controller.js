@@ -13,7 +13,7 @@ const getClients = asyncHandler(async (req, res) => {
   let convertedSort = {};
   let clientsData;
 
-  const total = await Client_Model.count({});
+  let total;
   if (sorting) {
     const sortArr = JSON.parse(sorting);
     sortArr.forEach((item) => {
@@ -23,6 +23,9 @@ const getClients = asyncHandler(async (req, res) => {
     });
   }
   if (search) {
+    total = await Client_Model.count({
+      $text: { $search: search },
+    });
     clientsData = await Client_Model.find({
       $text: { $search: search },
     })
@@ -33,6 +36,7 @@ const getClients = asyncHandler(async (req, res) => {
       .skip(start)
       .limit(size)
       .sort(convertedSort);
+    total = await Client_Model.count({});
   }
   res.status(200).json({
     data: clientsData,
