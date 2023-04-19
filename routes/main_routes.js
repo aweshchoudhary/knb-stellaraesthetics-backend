@@ -44,12 +44,25 @@ const {
   updateClient,
   deleteClient,
 } = require("../controllers/clients_controller");
-
+const {
+  createPipeline,
+  getAllPipelines,
+  getPipelineById,
+  updatePipeline,
+  deletePipeline,
+} = require("../controllers/pipline_controller");
 const upload = require("../apps/multer");
+
+// PIPELINE ENDPOINTS
+router.post("/pipeline/add", createPipeline);
+router.get("/pipeline/get-pipelines/", getAllPipelines);
+router.get("/pipeline/get-pipeline/:id", getPipelineById);
+router.put("/pipeline/update/:id", updatePipeline);
+router.delete("/pipeline/:position", deletePipeline);
 
 // STAGE ENDPOINTS
 router.post("/stage/add", createStage);
-router.get("/stage/get-stages", getAllStages);
+router.get("/stage/get-stages/:id", getAllStages);
 router.get("/stage/get-stage", getStageById);
 router.put("/stage/reorder", reorderStages);
 router.put("/stage/update/:id", updateStage);

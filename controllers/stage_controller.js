@@ -3,7 +3,10 @@ const asyncHandler = require("express-async-handler");
 
 // Stage Functions
 const getAllStages = asyncHandler(async (req, res) => {
-  const stages = await Stage_Model.find({}).sort({ position: "asc" });
+  const { id } = req.params;
+  const stages = await Stage_Model.find({ pipelineId: id }).sort({
+    position: "asc",
+  });
   res.status(200).json({ data: stages });
 });
 const getStageById = asyncHandler(async (req, res) => {
@@ -12,7 +15,7 @@ const getStageById = asyncHandler(async (req, res) => {
   res.status(200).json({ data: stage });
 });
 const createStage = asyncHandler(async (req, res) => {
-  const { name, position } = req.body;
+  const { name, position, pipelineId } = req.body;
   const stages = await Stage_Model.find({});
 
   stages.forEach(async (item) => {
@@ -25,6 +28,7 @@ const createStage = asyncHandler(async (req, res) => {
   const newStage = new Stage_Model({
     name,
     position,
+    pipelineId,
   });
   const stage = await newStage.save();
 

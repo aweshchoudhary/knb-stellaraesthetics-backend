@@ -4,6 +4,7 @@ const Stage_Schema = new mongoose.Schema({
   name: { type: String, required: true },
   items: [String],
   position: { type: Number, default: 1, required: true },
+  pipelineId: { type: String, required: true },
 });
 
 const Stage_Model = mongoose.model("Stage", Stage_Schema);
