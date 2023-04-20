@@ -12,6 +12,7 @@ const Activity_Schema = new mongoose.Schema(
     location: String,
     holder: String,
     cardId: String,
+    clientId: String,
     markDone: { type: Boolean, default: false },
   },
   { timestamps: true }

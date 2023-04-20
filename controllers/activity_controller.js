@@ -5,7 +5,6 @@ const getAllActivities = asyncHandler(async (req, res) => {
   const activities = await Activity_Model.find({ ...req.query }).sort({
     startDate: "desc",
   });
-  // console.log(activities);
   res.status(200).json({ data: activities });
 });
 const getActivitiesByCardId = asyncHandler(async (req, res) => {

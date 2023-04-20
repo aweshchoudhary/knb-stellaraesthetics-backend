@@ -6,6 +6,14 @@ const ClientDetails_Schema = new mongoose.Schema({
   mobile: String,
   whatsapp: String,
   email: String,
+  address: {
+    line1: String,
+    line2: String,
+    country: Object,
+    city: Object,
+    state: Object,
+    postalCode: Number,
+  },
 });
 
 ClientDetails_Schema.index({
