@@ -5,6 +5,8 @@ const File_Schema = new mongoose.Schema(
     name: String,
     size: Number,
     type: String,
+    url: String,
+    cardId: String,
   },
   { timestamps: true }
 );

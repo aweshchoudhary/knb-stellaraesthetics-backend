@@ -51,6 +51,12 @@ const {
   updatePipeline,
   deletePipeline,
 } = require("../controllers/pipline_controller");
+const {
+  addFile,
+  downloadFile,
+  deleteFile,
+  getAllFileInfo,
+} = require("../controllers/file_controller");
 const upload = require("../apps/multer");
 
 // PIPELINE ENDPOINTS
@@ -105,8 +111,9 @@ router.delete("/client/delete/:id", deleteClient);
 router.get("/client/get-clients", getClients);
 router.get("/client/get-client/:id", getClientById);
 
-// router.post("/file/add", upload.single("file"), addFile);
-// router.put("/file/download", getFile);
-// router.delete("/file/delete", deleteFile);
+router.post("/file/add", upload.single("file"), addFile);
+router.get("/file/get-fileinfos/:cardId", getAllFileInfo);
+router.get("/file/download/:filename", downloadFile);
+router.delete("/file/delete/:fileId", deleteFile);
 
 module.exports = router;

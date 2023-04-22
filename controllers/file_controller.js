@@ -1,39 +1,45 @@
+const asyncHandler = require("express-async-handler");
+const File_Model = require("../models/File_Model");
+const fs = require("fs");
+const path = require("path");
+
+const getAllFileInfo = asyncHandler(async (req, res) => {
+  const { cardId } = req.params;
+  const fileInfos = await File_Model.find({ cardId });
+  res.status(200).json({ data: fileInfos });
+});
 const addFile = asyncHandler(async (req, res) => {
   const { cardId } = req.body;
-  // get card by id
-  await Card_Model.findByIdAndUpdate(cardId, {
-    $push: {
-      files: {
-        name: req.file.filename,
-        size: req.file.size,
-        type: req.file.mimetype,
-      },
-    },
+  const { filename, path, size, mimetype } = req.file;
+  const newFile = new File_Model({
+    name: filename,
+    type: mimetype,
+    url: path,
+    size,
+    cardId,
   });
-  res.status(200).json({ message: "File has been attached to card" });
+  const fileInfo = await newFile.save();
+  res
+    .status(200)
+    .json({ message: "File has been attached to card", data: fileInfo });
 });
-const getFile = asyncHandler(async (req, res) => {
-  const { fileId } = req.body;
-  // // get card by id
-  // await Card_Model.findByIdAndUpdate(cardId, {
-  //   $push: {
-  //     activities: {
-  //       ...data,
-  //     },
-  //   },
-  // });
-  console.log("ehlasdfas");
-  res.status(200).json({ message: "Activity has been added to card" });
+const downloadFile = asyncHandler(async (req, res) => {
+  const { filename } = req.params;
+  const filePath = path.join(__dirname, "../public/uploads/", filename);
+  res.status(200).sendFile(filePath);
 });
 const deleteFile = asyncHandler(async (req, res) => {
-  const { cardId, fileId, filename } = req.body;
-  await Card_Model.findByIdAndUpdate(cardId, {
-    $pull: {
-      files: {
-        _id: fileId,
-      },
-    },
+  const { fileId } = req.params;
+  const fileInfo = await File_Model.findById(fileId);
+  await fs.unlink("public/uploads/" + fileInfo.name, async () => {
+    await fileInfo.deleteOne();
   });
-  await fs.unlink("public/uploads/" + filename);
   res.status(200).json({ message: "File has been deleted" });
 });
+
+module.exports = {
+  addFile,
+  downloadFile,
+  deleteFile,
+  getAllFileInfo,
+};

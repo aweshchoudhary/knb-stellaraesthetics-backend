@@ -35,9 +35,9 @@ const addActivity = asyncHandler(async (req, res) => {
 });
 const updateActivity = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { data } = req.body;
+  console.log(req.body);
   await Activity_Model.findByIdAndUpdate(id, {
-    ...data,
+    ...req.body,
   });
   res.status(200).json({ message: "Activity has been updated" });
 });
