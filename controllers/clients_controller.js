@@ -6,7 +6,6 @@ const createClient = asyncHandler(async (req, res) => {
   const client = await newClient.save();
   res.status(200).json({ message: "client has been created", data: client });
 });
-
 const getClients = asyncHandler(async (req, res) => {
   const { size, start, sorting, search } = req.query;
 

@@ -26,6 +26,13 @@ const getCard = asyncHandler(async (req, res) => {
   res.status(200).json({ data: card });
 });
 
+const searchCards = asyncHandler(async (req, res) => {
+  const { query } = req.query;
+  const cards = await Card_Model.find({
+    $text: { $search: query },
+  });
+  res.status(200).json({ data: cards });
+});
 const getCardsByStage = asyncHandler(async (req, res) => {
   const { stageId } = req.params;
   const cards = await Card_Model.find({ currentStage: stageId }).lean();
@@ -75,6 +82,7 @@ const deleteCard = asyncHandler(async (req, res) => {
 module.exports = {
   getCard,
   getCardsByStage,
+  searchCards,
   updateCardStage,
   createCard,
   updateCard,

@@ -25,5 +25,9 @@ const Card_Schema = new mongoose.Schema(
   { timestamps: true }
 );
 
+Card_Schema.index({
+  title: "text",
+});
+
 const Card_Model = mongoose.model("Card", Card_Schema);
 module.exports = Card_Model;
