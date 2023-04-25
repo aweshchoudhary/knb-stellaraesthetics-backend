@@ -4,9 +4,9 @@ const Activity_Schema = new mongoose.Schema(
   {
     title: String,
     type: String,
-    startDate: Date,
+    startDate: Object,
     startTime: String,
-    endDate: Date,
+    endDate: Object,
     endTime: String,
     description: String,
     location: String,
