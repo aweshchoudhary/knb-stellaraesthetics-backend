@@ -50,7 +50,7 @@ const {
   getAllPipelines,
   getPipelineById,
   updatePipeline,
-  deletePipeline,
+  deletePipelineById,
 } = require("../controllers/pipline_controller");
 const {
   addFile,
@@ -65,7 +65,7 @@ router.post("/pipeline/add", createPipeline);
 router.get("/pipeline/get-pipelines/", getAllPipelines);
 router.get("/pipeline/get-pipeline/:id", getPipelineById);
 router.put("/pipeline/update/:id", updatePipeline);
-router.delete("/pipeline/:position", deletePipeline);
+router.delete("/pipeline/delete/:id", deletePipelineById);
 
 // STAGE ENDPOINTS
 router.post("/stage/add", createStage);
