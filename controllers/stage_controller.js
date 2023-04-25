@@ -57,7 +57,6 @@ const updateStage = asyncHandler(async (req, res) => {
   await Stage_Model.findByIdAndUpdate(id, { name });
   res.status(200).json({ message: "Stage Has Been Deleted" });
 });
-
 const reorderStages = asyncHandler(async (req, res) => {
   const { stageId, newPosition } = req.body;
   const stages = await Stage_Model.find({});
