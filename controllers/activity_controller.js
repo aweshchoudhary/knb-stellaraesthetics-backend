@@ -8,13 +8,15 @@ const getAllActivities = asyncHandler(async (req, res) => {
   res.status(200).json({ data: activities });
 });
 const getActivitiesByCardId = asyncHandler(async (req, res) => {
-  const { cardId, markDone } = req.params;
+  const { cardId, markDone, overdue } = req.params;
   const activities = await Activity_Model.find({
     cardId,
     markDone: markDone || false,
   }).sort({
     startDate: "desc",
   });
+  if (overdue) {
+  }
   res.status(200).json({ data: activities });
 });
 const getActivityById = asyncHandler(async (req, res) => {
