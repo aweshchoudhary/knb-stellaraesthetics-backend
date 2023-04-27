@@ -23,6 +23,7 @@ const {
   getActivitiesByCardId,
   getActivityById,
   getAllActivities,
+  getActivitiesByClient,
 } = require("../controllers/activity_controller");
 const {
   addNote,
@@ -98,6 +99,10 @@ router.delete("/activity/delete/:id", deleteActivity);
 router.get("/activity/get-all-activities", getAllActivities);
 router.get("/activity/get-activities/:cardId", getActivitiesByCardId);
 router.get("/activity/get-activity/:id", getActivityById);
+router.get(
+  "/activity/get-activities-by-client/:clientId",
+  getActivitiesByClient
+);
 
 // LABEL ENDPOINTS
 router.post("/label/add", createLabel);

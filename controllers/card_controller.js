@@ -6,12 +6,6 @@ const asyncHandler = require("express-async-handler");
 const createCard = asyncHandler(async (req, res) => {
   const newCard = new Card_Model({
     ...req.body,
-    stage: [
-      {
-        _id: req.body.stage,
-      },
-    ],
-    currentStage: req.body.stage,
   });
   const card = await newCard.save();
   await Stage_Model.findByIdAndUpdate(req.body.stage, {
