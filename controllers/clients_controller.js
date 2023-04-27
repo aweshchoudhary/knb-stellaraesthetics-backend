@@ -28,12 +28,12 @@ const getClients = asyncHandler(async (req, res) => {
     clientsData = await Client_Model.find({
       $text: { $search: search },
     })
-      .limit(size)
+      .limit(size || 25)
       .sort(convertedSort);
   } else {
     clientsData = await Client_Model.find({})
       .skip(start)
-      .limit(size)
+      .limit(size || 25)
       .sort(convertedSort);
     total = await Client_Model.count({});
   }

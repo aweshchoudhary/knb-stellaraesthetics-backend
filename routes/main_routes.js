@@ -71,9 +71,9 @@ router.delete("/pipeline/delete/:id", deletePipelineById);
 router.post("/stage/add", createStage);
 router.get("/stage/get-stages/:id", getAllStages);
 router.get("/stage/get-stage", getStageById);
-router.put("/stage/reorder", reorderStages);
+router.put("/stage/reorder/:pipelineId", reorderStages);
 router.put("/stage/update/:id", updateStage);
-router.delete("/stage/:position", deleteStage);
+router.delete("/stage/:pipelineId/:position", deleteStage);
 
 // CARD ENDPOINTS
 router.get("/card/get-card/:id", getCard);

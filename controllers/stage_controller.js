@@ -37,13 +37,14 @@ const createStage = asyncHandler(async (req, res) => {
     .json({ message: "Stage has been generated successfully", stage });
 });
 const deleteStage = asyncHandler(async (req, res) => {
-  const { position } = req.params;
+  const { position, pipelineId } = req.params;
   // Delete the document with the given position number
-  await Stage_Model.findOneAndDelete({ position });
+  await Stage_Model.findOneAndDelete({ position, pipelineId });
 
   // Update the position numbers of all the remaining documents
   const stagesToUpdate = await Stage_Model.find({
     position: { $gt: position },
+    pipelineId,
   });
   for (let i = 0; i < stagesToUpdate.length; i++) {
     stagesToUpdate[i].position--;
@@ -58,8 +59,9 @@ const updateStage = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Stage Has Been Deleted" });
 });
 const reorderStages = asyncHandler(async (req, res) => {
+  const { pipelineId } = req.params;
   const { stageId, newPosition } = req.body;
-  const stages = await Stage_Model.find({});
+  const stages = await Stage_Model.find({ pipelineId });
 
   // Find the element to update
   const elementIndex = stages.findIndex((item) => item.id === stageId);
