@@ -18,7 +18,5 @@ app.use(cors());
 app.use(morgan("dev"));
 app.use("/api", main_routes);
 
-app.listen(port, "0.0.0.0", () =>
-  console.log(`Server is started on port ${port}`)
-);
+app.listen(port, () => console.log(`Server is started on port ${port}`));
 connect_db();
