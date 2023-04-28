@@ -5,7 +5,7 @@ const asyncHandler = require("express-async-handler");
 
 const getNotesByCardId = asyncHandler(async (req, res) => {
   const { cardId } = req.params;
-  const notes = await Note_Model.find({ cardId });
+  const notes = await Note_Model.find({ cardId: { $in: cardId } });
   res.status(200).json({ data: notes });
 });
 

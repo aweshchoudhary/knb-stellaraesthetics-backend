@@ -6,7 +6,7 @@ const File_Schema = new mongoose.Schema(
     size: Number,
     type: String,
     url: String,
-    cardId: String,
+    cardId: [String],
   },
   { timestamps: true }
 );

@@ -33,6 +33,12 @@ const getCardsByStage = asyncHandler(async (req, res) => {
   res.status(200).json({ data: cards });
 });
 
+const getCardsByClientId = asyncHandler(async (req, res) => {
+  const { clientId } = req.params;
+  const cards = await Card_Model.find({ contacts: { $in: clientId } }).lean();
+  res.status(200).json({ data: cards });
+});
+
 const updateCardStage = asyncHandler(async (req, res) => {
   const { newStageId, prevStageId, cardId } = req.body;
   // // Remove card id from previous stage
@@ -59,7 +65,6 @@ const updateCardStage = asyncHandler(async (req, res) => {
   await card.save();
   res.status(200).json({ message: "stage has been changed" });
 });
-
 const updateCard = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { update } = req.body;
@@ -76,6 +81,7 @@ const deleteCard = asyncHandler(async (req, res) => {
 module.exports = {
   getCard,
   getCardsByStage,
+  getCardsByClientId,
   searchCards,
   updateCardStage,
   createCard,

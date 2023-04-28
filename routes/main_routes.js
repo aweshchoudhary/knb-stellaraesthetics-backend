@@ -15,6 +15,7 @@ const {
   updateCardStage,
   getCardsByStage,
   searchCards,
+  getCardsByClientId,
 } = require("../controllers/card_controller");
 const {
   addActivity,
@@ -79,6 +80,7 @@ router.delete("/stage/:pipelineId/:position", deleteStage);
 // CARD ENDPOINTS
 router.get("/card/get-card/:id", getCard);
 router.get("/card/get-cards/:stageId", getCardsByStage);
+router.get("/card/get-cards-by-client/:clientId", getCardsByClientId);
 router.get("/card/search", searchCards);
 router.post("/card/add", createCard);
 router.delete("/card/delete/:id", deleteCard);
