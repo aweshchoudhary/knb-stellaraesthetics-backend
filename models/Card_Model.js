@@ -5,13 +5,6 @@ const Value_Schema = new mongoose.Schema({
   type: String,
 });
 
-const Stage_Schema = new mongoose.Schema(
-  {
-    active: { type: Boolean, default: true },
-  },
-  { timestamps: true }
-);
-
 const Card_Schema = new mongoose.Schema(
   {
     contacts: [String],
@@ -26,6 +19,7 @@ const Card_Schema = new mongoose.Schema(
 
 Card_Schema.index({
   title: "text",
+  contacts: "text",
 });
 
 const Card_Model = mongoose.model("Card", Card_Schema);
