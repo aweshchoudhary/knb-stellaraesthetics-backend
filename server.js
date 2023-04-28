@@ -14,7 +14,11 @@ dotenv.config();
 
 app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://knb-stellaraesthetics.netlify.app"],
+  })
+);
 app.use(morgan("dev"));
 app.use("/api", main_routes);
 
