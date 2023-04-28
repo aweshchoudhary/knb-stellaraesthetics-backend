@@ -13,6 +13,7 @@ const Card_Schema = new mongoose.Schema(
     currentStage: String,
     label: String,
     expectedClosingDate: Date,
+    status: { type: String, default: "open" },
   },
   { timestamps: true }
 );

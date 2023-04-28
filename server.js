@@ -16,7 +16,10 @@ app.use(express.json());
 app.use(express.static(`${__dirname}/public`));
 app.use(
   cors({
-    origin: ["https://knb-stellaraesthetics.netlify.app"],
+    origin: [
+      "https://knb-stellaraesthetics.netlify.app",
+      "http://localhost:5173",
+    ],
   })
 );
 app.use(morgan("dev"));
