@@ -1,16 +1,15 @@
 const mongoose = require("mongoose");
 
-const Activity_Schema = new mongoose.Schema(
+const Call_Schema = new mongoose.Schema(
   {
     title: String,
     description: String,
     type: String,
     startDateTime: Date,
     endDateTime: Date,
-    location: String,
-    performer: String,
+    sender: String,
+    receiver: String,
     dealId: [String],
-    contactId: String,
     involved_contacts: [String],
     involved_users: [String],
     completed_on: Date,
@@ -18,5 +17,5 @@ const Activity_Schema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Activity_Model = mongoose.model("Activity", Activity_Schema);
-module.exports = Activity_Model;
+const Call_Model = mongoose.model("Call", Call_Schema);
+module.exports = Call_Model;

@@ -1,12 +1,12 @@
 const asyncHandler = require("express-async-handler");
-const Client_Model = require("../models/Client_Model");
+const Contact_Model = require("../models/Contact_Model");
 
-const createClient = asyncHandler(async (req, res) => {
-  const newClient = new Client_Model({ ...req.body });
-  const client = await newClient.save();
+const createContact = asyncHandler(async (req, res) => {
+  const newContact = new Contact_Model({ ...req.body });
+  const client = await newContact.save();
   res.status(200).json({ message: "client has been created", data: client });
 });
-const getClients = asyncHandler(async (req, res) => {
+const getContacts = asyncHandler(async (req, res) => {
   const { size, start, sorting, search } = req.query;
 
   let convertedSort = {};
@@ -22,48 +22,48 @@ const getClients = asyncHandler(async (req, res) => {
     });
   }
   if (search) {
-    total = await Client_Model.count({
+    total = await Contact_Model.count({
       $text: { $search: search },
     });
-    clientsData = await Client_Model.find({
+    clientsData = await Contact_Model.find({
       $text: { $search: search },
     })
       .limit(size || 25)
       .sort(convertedSort);
   } else {
-    clientsData = await Client_Model.find({})
+    clientsData = await Contact_Model.find({})
       .skip(start)
       .limit(size || 25)
       .sort(convertedSort);
-    total = await Client_Model.count({});
+    total = await Contact_Model.count({});
   }
   res.status(200).json({
     data: clientsData,
     meta: { total },
   });
 });
-const getClientById = asyncHandler(async (req, res) => {
+const getContactById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const client = await Client_Model.findById(id);
+  const client = await Contact_Model.findById(id);
   res.status(200).json({ message: "client has been created", data: client });
 });
-const updateClient = asyncHandler(async (req, res) => {
+const updateContact = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await Client_Model.findByIdAndUpdate(id, {
+  await Contact_Model.findByIdAndUpdate(id, {
     ...req.body,
   });
   res.status(200).json({ message: "client has been updated" });
 });
-const deleteClient = asyncHandler(async (req, res) => {
+const deleteContact = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await Client_Model.findByIdAndDelete(id);
+  await Contact_Model.findByIdAndDelete(id);
   res.status(200).json({ message: "client has been deleted" });
 });
 
 module.exports = {
-  createClient,
-  getClients,
-  getClientById,
-  updateClient,
-  deleteClient,
+  createContact,
+  getContacts,
+  getContactById,
+  updateContact,
+  deleteContact,
 };

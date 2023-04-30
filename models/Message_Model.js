@@ -2,13 +2,11 @@ const mongoose = require("mongoose");
 
 const File_Schema = new mongoose.Schema(
   {
-    name: String,
-    size: Number,
-    type: String,
-    url: String,
-    uploader: String,
-    sent_to_contacts: [String],
-    sent_to_users: [String],
+    startDateTime: String,
+    endDateTime: String,
+    user: String,
+    contact: String,
+    from_me: Boolean,
     dealId: [String],
   },
   { timestamps: true }

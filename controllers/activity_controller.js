@@ -1,5 +1,5 @@
 const Activity_Model = require("../models/Activity_Model");
-const Card_Model = require("../models/Card_Model");
+const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
 const getAllActivities = asyncHandler(async (req, res) => {
@@ -8,7 +8,7 @@ const getAllActivities = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ data: activities });
 });
-const getActivitiesByCardId = asyncHandler(async (req, res) => {
+const getActivitiesByDealId = asyncHandler(async (req, res) => {
   const { cardId, markDone, overdue } = req.params;
   const activities = await Activity_Model.find({
     cardId: { $in: cardId },
@@ -29,7 +29,7 @@ const getActivityById = asyncHandler(async (req, res) => {
 const getActivitiesByClient = asyncHandler(async (req, res) => {
   const { clientId } = req.params;
 
-  const cards = await Card_Model.find({ contacts: { $in: clientId } });
+  const cards = await Deal_Model.find({ contacts: { $in: clientId } });
   const cardIds = cards.map((card) => card.id);
 
   const allActivities = await Activity_Model.find({
@@ -69,7 +69,7 @@ module.exports = {
   addActivity,
   updateActivity,
   deleteActivity,
-  getActivitiesByCardId,
+  getActivitiesByDealId,
   getActivityById,
   getAllActivities,
   getActivitiesByClient,

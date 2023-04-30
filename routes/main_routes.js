@@ -16,7 +16,7 @@ const {
   getCardsByStage,
   searchCards,
   getCardsByClientId,
-} = require("../controllers/card_controller");
+} = require("../controllers/deal_controller");
 const {
   addActivity,
   updateActivity,
@@ -46,7 +46,7 @@ const {
   getClientById,
   updateClient,
   deleteClient,
-} = require("../controllers/clients_controller");
+} = require("../controllers/contacts_controller");
 const {
   createPipeline,
   getAllPipelines,
@@ -78,20 +78,20 @@ router.put("/stage/update/:id", updateStage);
 router.delete("/stage/:pipelineId/:position", deleteStage);
 
 // CARD ENDPOINTS
-router.get("/card/get-card/:id", getCard);
-router.get("/card/get-cards/:stageId", getCardsByStage);
-router.get("/card/get-cards-by-client/:clientId", getCardsByClientId);
-router.get("/card/search", searchCards);
-router.post("/card/add", createCard);
-router.delete("/card/delete/:id", deleteCard);
-router.put("/card/update/:id", updateCard);
-router.put("/card/card-stage", updateCardStage);
+router.get("/deal/get-deal/:id", getCard);
+router.get("/deal/get-deals/:stageId", getCardsByStage);
+router.get("/deal/get-deals-by-contact/:contactId", getCardsByClientId);
+router.get("/deal/search", searchCards);
+router.post("/deal/add", createCard);
+router.delete("/deal/delete/:id", deleteCard);
+router.put("/deal/update/:id", updateCard);
+router.put("/deal/deal-stage", updateCardStage);
 
 // NOTE ENDPOINTS
 router.post("/note/add", addNote);
 router.put("/note/update/:id", updateNote);
 router.delete("/note/delete/:id", deleteNote);
-router.get("/note/get-notes/:cardId", getNotesByCardId);
+router.get("/note/get-notes/:dealId", getNotesByCardId);
 router.get("/note/get-note/:id", getNotesById);
 
 // ACTIVITY ENDPOINTS
@@ -99,10 +99,10 @@ router.post("/activity/add", addActivity);
 router.put("/activity/update/:id", updateActivity);
 router.delete("/activity/delete/:id", deleteActivity);
 router.get("/activity/get-all-activities", getAllActivities);
-router.get("/activity/get-activities/:cardId", getActivitiesByCardId);
+router.get("/activity/get-activities/:dealId", getActivitiesByCardId);
 router.get("/activity/get-activity/:id", getActivityById);
 router.get(
-  "/activity/get-activities-by-client/:clientId",
+  "/activity/get-activities-by-contact/:contactId",
   getActivitiesByClient
 );
 
@@ -114,14 +114,14 @@ router.get("/label/get-labels", getLabels);
 router.get("/label/get-label/:id", getLabelById);
 
 // CLIENT ENDPOINTS
-router.post("/client/add", createClient);
-router.put("/client/update/:id", updateClient);
-router.delete("/client/delete/:id", deleteClient);
-router.get("/client/get-clients", getClients);
-router.get("/client/get-client/:id", getClientById);
+router.post("/contact/add", createClient);
+router.put("/contact/update/:id", updateClient);
+router.delete("/contact/delete/:id", deleteClient);
+router.get("/contact/get-contacts", getClients);
+router.get("/contact/get-contact/:id", getClientById);
 
 router.post("/file/add", upload.single("file"), addFile);
-router.get("/file/get-fileinfos/:cardId", getAllFileInfo);
+router.get("/file/get-fileinfos/:dealId", getAllFileInfo);
 router.get("/file/download/:filename", downloadFile);
 router.delete("/file/delete/:fileId", deleteFile);
 
