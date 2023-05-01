@@ -1,9 +1,33 @@
 const AsyncHandler = require("express-async-handler");
 const Pipeline_Model = require("../models/Pipeline_Model");
 const { deletePipeline } = require("../helper/DeleteHelper");
+const Stage_Model = require("../models/Stage_Model");
 
-const getAllPipelines = AsyncHandler(async (req, res) => {
-  const pipelines = await Pipeline_Model.find({});
+const getPipelines = AsyncHandler(async (req, res) => {
+  const { filters, search, sort, limit, select, count, start } = req.query;
+
+  let pipelines;
+  if (data) {
+    pipelines = await Pipeline_Model.find(filters || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (count) {
+    pipelines = await Pipeline_Model.count(filters || search || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (search) {
+    pipelines = await Pipeline_Model.find({ $text: { $search: search } })
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
   res.status(200).json({ data: pipelines });
 });
 
@@ -36,9 +60,9 @@ const deletePipelineById = AsyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getAllPipelines,
   getPipelineById,
   createPipeline,
   updatePipeline,
   deletePipelineById,
+  getPipelines,
 };

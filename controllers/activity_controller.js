@@ -2,21 +2,31 @@ const Activity_Model = require("../models/Activity_Model");
 const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
-const getAllActivities = asyncHandler(async (req, res) => {
-  const activities = await Activity_Model.find({ ...req.query }).sort({
-    startDate: "desc",
-  });
-  res.status(200).json({ data: activities });
-});
-const getActivitiesByDealId = asyncHandler(async (req, res) => {
-  const { cardId, markDone, overdue } = req.params;
-  const activities = await Activity_Model.find({
-    cardId: { $in: cardId },
-    markDone: markDone || false,
-  }).sort({
-    startDate: "desc",
-  });
-  if (overdue) {
+const getActivities = asyncHandler(async (req, res) => {
+  const { filters, search, sort, limit, select, count, start } = req.query;
+
+  let activities;
+
+  if (data) {
+    activities = await Activity_Model.find(filters || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (count) {
+    activities = await Activity_Model.count(filters || search || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (search) {
+    activities = await Activity_Model.find({ $text: { $search: search } })
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
   }
   res.status(200).json({ data: activities });
 });
@@ -24,22 +34,6 @@ const getActivityById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const activity = await Activity_Model.findById(id);
   res.status(200).json({ data: activity });
-});
-
-const getActivitiesByContact = asyncHandler(async (req, res) => {
-  const { clientId } = req.params;
-
-  const cards = await Deal_Model.find({ contacts: { $in: clientId } });
-  const cardIds = cards.map((card) => card.id);
-
-  const allActivities = await Activity_Model.find({
-    cardId: { $in: cardIds },
-    markDone: false,
-  }).sort({
-    startDate: "desc",
-  });
-
-  res.status(200).json({ data: allActivities });
 });
 
 const addActivity = asyncHandler(async (req, res) => {
@@ -69,8 +63,6 @@ module.exports = {
   addActivity,
   updateActivity,
   deleteActivity,
-  getActivitiesByDealId,
   getActivityById,
-  getAllActivities,
-  getActivitiesByContact,
+  getActivities,
 };

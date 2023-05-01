@@ -2,11 +2,32 @@ const Stage_Model = require("../models/Stage_Model");
 const asyncHandler = require("express-async-handler");
 
 // Stage Functions
-const getAllStages = asyncHandler(async (req, res) => {
-  const { id } = req.params;
-  const stages = await Stage_Model.find({ pipelineId: id }).sort({
-    position: "asc",
-  });
+const getStages = asyncHandler(async (req, res) => {
+  const { filters, search, sort, limit, select, count, start } = req.query;
+
+  let stages;
+
+  if (data) {
+    stages = await Stage_Model.find(filters || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (count) {
+    stages = await Stage_Model.count(filters || search || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (search) {
+    stages = await Stage_Model.find({ $text: { $search: search } })
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
   res.status(200).json({ data: stages });
 });
 const getStageById = asyncHandler(async (req, res) => {
@@ -87,7 +108,7 @@ const reorderStages = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  getAllStages,
+  getStages,
   getStageById,
   createStage,
   deleteStage,

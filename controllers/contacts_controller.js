@@ -7,35 +7,32 @@ const createContact = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "client has been created", data: client });
 });
 const getContacts = asyncHandler(async (req, res) => {
-  const { size, start, sorting, search } = req.query;
+  const { filters, search, sort, limit, select, count, start } = req.query;
 
-  let convertedSort = {};
-  let clientsData;
-
+  let contacts;
   let total;
-  if (sorting) {
-    const sortArr = JSON.parse(sorting);
-    sortArr.forEach((item) => {
-      convertedSort = {
-        [item.id]: item.desc ? "desc" : "asc",
-      };
-    });
+
+  if (data) {
+    contacts = await Contact_Model.find(filters || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (count) {
+    contacts = await Contact_Model.count(filters || search || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+    total = contacts;
   }
   if (search) {
-    total = await Contact_Model.count({
-      $text: { $search: search },
-    });
-    clientsData = await Contact_Model.find({
-      $text: { $search: search },
-    })
-      .limit(size || 25)
-      .sort(convertedSort);
-  } else {
-    clientsData = await Contact_Model.find({})
-      .skip(start)
-      .limit(size || 25)
-      .sort(convertedSort);
-    total = await Contact_Model.count({});
+    contacts = await Contact_Model.find({ $text: { $search: search } })
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
   }
   res.status(200).json({
     data: clientsData,

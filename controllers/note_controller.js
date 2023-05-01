@@ -3,10 +3,32 @@ const asyncHandler = require("express-async-handler");
 
 // NOTES CONTROLLERS
 
-const getNotesByDealId = asyncHandler(async (req, res) => {
-  const { cardId } = req.params;
-  const notes = await Note_Model.find({ cardId: { $in: cardId } });
-  res.status(200).json({ data: notes });
+const getNotes = asyncHandler(async (req, res) => {
+  const { filters, search, sort, limit, select, count, start } = req.query;
+
+  let notes;
+
+  if (data) {
+    notes = await Note_Model.find(filters || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (count) {
+    notes = await Note_Model.count(filters || search || {})
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
+  if (search) {
+    notes = await Note_Model.find({ $text: { $search: search } })
+      .limit(limit || 25)
+      .select(select)
+      .sort(sort)
+      .skip(start || 0);
+  }
 });
 
 const getNotesById = asyncHandler(async (req, res) => {
@@ -42,6 +64,6 @@ module.exports = {
   addNote,
   updateNote,
   deleteNote,
-  getNotesByDealId,
+  getNotes,
   getNotesById,
 };

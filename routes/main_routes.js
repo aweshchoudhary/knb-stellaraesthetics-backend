@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const {
-  getAllStages,
+  getStages,
   createStage,
   updateStage,
   deleteStage,
@@ -13,24 +13,20 @@ const {
   deleteDeal,
   updateDeal,
   updateDealStage,
-  getDealsByStage,
-  searchDeals,
-  getDealsByContactId,
+  getDeals,
 } = require("../controllers/deal_controller");
 const {
   addActivity,
   updateActivity,
   deleteActivity,
-  getActivitiesByDealId,
   getActivityById,
-  getAllActivities,
-  getActivitiesByContact,
+  getActivities,
 } = require("../controllers/activity_controller");
 const {
   addNote,
   updateNote,
   deleteNote,
-  getNotesByDealId,
+  getNotes,
   getNotesById,
 } = require("../controllers/note_controller");
 const {
@@ -49,10 +45,11 @@ const {
 } = require("../controllers/contacts_controller");
 const {
   createPipeline,
-  getAllPipelines,
+  getPipelines,
   getPipelineById,
   updatePipeline,
   deletePipelineById,
+  getPipelines,
 } = require("../controllers/pipline_controller");
 const {
   addFile,
@@ -64,24 +61,21 @@ const upload = require("../apps/multer");
 
 // PIPELINE ENDPOINTS
 router.post("/pipeline/add", createPipeline);
-router.get("/pipeline/get-pipelines/", getAllPipelines);
+router.get("/pipeline/get-pipelines/", getPipelines);
 router.get("/pipeline/get-pipeline/:id", getPipelineById);
 router.put("/pipeline/update/:id", updatePipeline);
 router.delete("/pipeline/delete/:id", deletePipelineById);
 
 // STAGE ENDPOINTS
 router.post("/stage/add", createStage);
-router.get("/stage/get-stages/:id", getAllStages);
-router.get("/stage/get-stage", getStageById);
+router.get("/stage/get-stages", getStages);
 router.put("/stage/reorder/:pipelineId", reorderStages);
 router.put("/stage/update/:id", updateStage);
 router.delete("/stage/:pipelineId/:position", deleteStage);
 
 // CARD ENDPOINTS
 router.get("/deal/get-deal/:id", getDeal);
-router.get("/deal/get-deals/:stageId", getDealsByStage);
-router.get("/deal/get-deals-by-contact/:contactId", getDealsByContactId);
-router.get("/deal/search", searchDeals);
+router.get("/deal/get-deals", getDeals);
 router.post("/deal/add", createDeal);
 router.delete("/deal/delete/:id", deleteDeal);
 router.put("/deal/update/:id", updateDeal);
@@ -91,20 +85,15 @@ router.put("/deal/deal-stage", updateDealStage);
 router.post("/note/add", addNote);
 router.put("/note/update/:id", updateNote);
 router.delete("/note/delete/:id", deleteNote);
-router.get("/note/get-notes/:dealId", getNotesByDealId);
+router.get("/note/get-notes", getNotes);
 router.get("/note/get-note/:id", getNotesById);
 
 // ACTIVITY ENDPOINTS
 router.post("/activity/add", addActivity);
 router.put("/activity/update/:id", updateActivity);
 router.delete("/activity/delete/:id", deleteActivity);
-router.get("/activity/get-all-activities", getAllActivities);
-router.get("/activity/get-activities/:dealId", getActivitiesByDealId);
 router.get("/activity/get-activity/:id", getActivityById);
-router.get(
-  "/activity/get-activities-by-contact/:contactId",
-  getActivitiesByContact
-);
+router.get("/activity/get-activities", getActivities);
 
 // LABEL ENDPOINTS
 router.post("/label/add", createLabel);
