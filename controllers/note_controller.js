@@ -3,7 +3,7 @@ const asyncHandler = require("express-async-handler");
 
 // NOTES CONTROLLERS
 
-const getNotesByCardId = asyncHandler(async (req, res) => {
+const getNotesByDealId = asyncHandler(async (req, res) => {
   const { cardId } = req.params;
   const notes = await Note_Model.find({ cardId: { $in: cardId } });
   res.status(200).json({ data: notes });
@@ -42,6 +42,6 @@ module.exports = {
   addNote,
   updateNote,
   deleteNote,
-  getNotesByCardId,
+  getNotesByDealId,
   getNotesById,
 };

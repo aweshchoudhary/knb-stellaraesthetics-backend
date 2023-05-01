@@ -14,7 +14,7 @@ const Product_Service_Inter_Schema = new mongoose.Schema({
 Product_Service_Inter_Schema.index({});
 
 const Product_Service_Inter_Model = mongoose.model(
-  "Product_Service_Inter",
+  "ProductServiceInter",
   Product_Service_Inter_Schema
 );
 

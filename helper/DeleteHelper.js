@@ -1,7 +1,6 @@
-const AsyncHandler = require("express-async-handler");
 const Pipeline_Model = require("../models/Pipeline_Model");
 const Stage_Model = require("../models/Stage_Model");
-const Card_Model = require("../models/Card_Model");
+const Deal_Model = require("../models/Deal_Model");
 const File_Model = require("../models/File_Model");
 const Activity_Model = require("../models/Activity_Model");
 const Note_Model = require("../models/Note_Model");
@@ -16,13 +15,13 @@ async function deleteStages(pipelineId) {
   const stages = await Stage_Model.find({ pipelineId }).select("_id");
   stages.length > 0 &&
     stages.forEach(async (stage) => {
-      await deleteCards(stage.id);
+      await deleteDeals(stage.id);
       await stage.deleteOne();
     });
 }
 
-async function deleteCards(stageId) {
-  const cards = await Card_Model.find({ currentStage: stageId });
+async function deleteDeals(stageId) {
+  const cards = await Deal_Model.find({ currentStage: stageId });
 
   cards.length > 0 &&
     cards.forEach(async (card) => {
@@ -46,6 +45,6 @@ async function deleteNotes(cardId) {
 module.exports = {
   deletePipeline,
   deleteStages,
-  deleteCards,
+  deleteDeals,
   deleteFiles,
 };

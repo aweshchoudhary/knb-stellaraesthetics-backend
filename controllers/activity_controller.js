@@ -26,7 +26,7 @@ const getActivityById = asyncHandler(async (req, res) => {
   res.status(200).json({ data: activity });
 });
 
-const getActivitiesByClient = asyncHandler(async (req, res) => {
+const getActivitiesByContact = asyncHandler(async (req, res) => {
   const { clientId } = req.params;
 
   const cards = await Deal_Model.find({ contacts: { $in: clientId } });
@@ -72,5 +72,5 @@ module.exports = {
   getActivitiesByDealId,
   getActivityById,
   getAllActivities,
-  getActivitiesByClient,
+  getActivitiesByContact,
 };

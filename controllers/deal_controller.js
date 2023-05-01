@@ -2,42 +2,42 @@ const Stage_Model = require("../models/Stage_Model");
 const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
-// Card Functions
-const createCard = asyncHandler(async (req, res) => {
-  const newCard = new Deal_Model(req.body);
-  const card = await newCard.save();
+// Deal Functions
+const createDeal = asyncHandler(async (req, res) => {
+  const newDeal = new Deal_Model(req.body);
+  const card = await newDeal.save();
   await Stage_Model.findByIdAndUpdate(req.body.stage, {
     $push: { items: card._id },
   });
-  res.status(200).json({ message: "Card has been created", data: card });
+  res.status(200).json({ message: "Deal has been created", data: card });
 });
 
-const getCard = asyncHandler(async (req, res) => {
+const getDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const card = await Deal_Model.findById(id);
   res.status(200).json({ data: card });
 });
 
-const searchCards = asyncHandler(async (req, res) => {
+const searchDeals = asyncHandler(async (req, res) => {
   const { query } = req.query;
   const cards = await Deal_Model.find({
     $text: { $search: query },
   });
   res.status(200).json({ data: cards });
 });
-const getCardsByStage = asyncHandler(async (req, res) => {
+const getDealsByStage = asyncHandler(async (req, res) => {
   const { stageId } = req.params;
   const cards = await Deal_Model.find({ currentStage: stageId }).lean();
   res.status(200).json({ data: cards });
 });
 
-const getCardsByClientId = asyncHandler(async (req, res) => {
+const getDealsByContactId = asyncHandler(async (req, res) => {
   const { clientId } = req.params;
   const cards = await Deal_Model.find({ contacts: { $in: clientId } }).lean();
   res.status(200).json({ data: cards });
 });
 
-const updateCardStage = asyncHandler(async (req, res) => {
+const updateDealStage = asyncHandler(async (req, res) => {
   const { newStageId, prevStageId, cardId } = req.body;
   // // Remove card id from previous stage
   // await Stage_Model.findByIdAndUpdate(prevStageId, {
@@ -63,26 +63,26 @@ const updateCardStage = asyncHandler(async (req, res) => {
   await card.save();
   res.status(200).json({ message: "stage has been changed" });
 });
-const updateCard = asyncHandler(async (req, res) => {
+const updateDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { update } = req.body;
   await Deal_Model.findByIdAndUpdate(id, { ...update });
-  res.status(200).json({ message: "Card Has Been Updated" });
+  res.status(200).json({ message: "Deal Has Been Updated" });
 });
 
-const deleteCard = asyncHandler(async (req, res) => {
+const deleteDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
   await Deal_Model.findByIdAndDelete(id);
-  res.status(200).json({ message: "Card Has Been Deleted" });
+  res.status(200).json({ message: "Deal Has Been Deleted" });
 });
 
 module.exports = {
-  getCard,
-  getCardsByStage,
-  getCardsByClientId,
-  searchCards,
-  updateCardStage,
-  createCard,
-  updateCard,
-  deleteCard,
+  getDeal,
+  getDealsByStage,
+  getDealsByContactId,
+  searchDeals,
+  updateDealStage,
+  createDeal,
+  updateDeal,
+  deleteDeal,
 };

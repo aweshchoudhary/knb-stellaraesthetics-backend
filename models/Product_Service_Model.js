@@ -14,7 +14,7 @@ const Product_Service_Schema = new mongoose.Schema({
 Product_Service_Schema.index({});
 
 const Product_Service_Model = mongoose.model(
-  "Product_Service",
+  "ProductService",
   Product_Service_Schema
 );
 
