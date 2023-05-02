@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/User");
+const User = require("../models/User_Model");
 const { hashSync, compareSync } = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -21,6 +21,11 @@ const register = asyncHandler(async (req, res) => {
   if (!fullname || !username || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
+  const isEmailExists = await User.findOne({ email });
+  if (isEmailExists) res.status(400).json({ message: "Email Already Taken" });
+  const isUsernameExists = await User.findOne({ username });
+  if (isUsernameExists)
+    res.status(400).json({ message: "Username Already Taken" });
 
   const newUser = new User({
     fullname,

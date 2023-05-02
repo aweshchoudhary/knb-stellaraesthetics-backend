@@ -5,7 +5,7 @@ const path = require("path");
 
 const getAllFileInfo = asyncHandler(async (req, res) => {
   const { cardId } = req.params;
-  const fileInfos = await File_Model.find({ cardId: { $in: cardId } });
+  const fileInfos = await File_Model.find({ cardId });
   res.status(200).json({ data: fileInfos });
 });
 const addFile = asyncHandler(async (req, res) => {

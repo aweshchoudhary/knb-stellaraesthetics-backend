@@ -6,6 +6,8 @@ const cors = require("cors");
 const connect_db = require("./config/connect_db");
 const main_routes = require("./routes/main_routes");
 const auth_routes = require("./routes/auth_routes");
+const user_routes = require("./routes/user_routes");
+
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 
@@ -29,6 +31,7 @@ app.use(passport.initialize());
 
 app.use(morgan("dev"));
 app.use("/api", main_routes);
+app.use("/api", user_routes);
 app.use("/auth", auth_routes);
 
 app.listen(port, () => console.log(`Server is started on port ${port}`));

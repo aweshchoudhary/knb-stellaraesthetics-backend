@@ -31,8 +31,6 @@ const getContacts = asyncHandler(async (req, res) => {
       };
     });
   }
-
-  console.log(filters);
   if (data) {
     contacts = await Contact_Model.find(datafilters || {})
       .limit(limit || 25)
