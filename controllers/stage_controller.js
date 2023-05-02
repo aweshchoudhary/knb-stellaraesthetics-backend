@@ -3,32 +3,52 @@ const asyncHandler = require("express-async-handler");
 
 // Stage Functions
 const getStages = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const {
+    filters,
+    search,
+    sort,
+    limit,
+    select,
+    count,
+    start,
+    data,
+    dataFilters,
+  } = req.query;
 
   let stages;
+  let total = 0;
+  let sortObj;
 
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
   if (data) {
     stages = await Stage_Model.find(filters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    stages = await Stage_Model.count(filters || search || {})
+    total = await Stage_Model.count(filters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (search) {
     stages = await Stage_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
-  res.status(200).json({ data: stages });
+  res.status(200).json({ data: stages, meta: { total } });
 });
 const getStageById = asyncHandler(async (req, res) => {
   const { id } = req.query;

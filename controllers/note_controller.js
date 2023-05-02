@@ -4,31 +4,53 @@ const asyncHandler = require("express-async-handler");
 // NOTES CONTROLLERS
 
 const getNotes = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const {
+    filters,
+    search,
+    sort,
+    limit,
+    select,
+    count,
+    start,
+    data,
+    dataFilters,
+  } = req.query;
 
   let notes;
+  let total = 0;
+  let sortObj;
+
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
 
   if (data) {
-    notes = await Note_Model.find(filters || {})
+    notes = await Note_Model.find(dataFilters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    notes = await Note_Model.count(filters || search || {})
+    total = await Note_Model.count(dataFilters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (search) {
     notes = await Note_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
+  res.status(200).json({ data: notes, meta: { total } });
 });
 
 const getNotesById = asyncHandler(async (req, res) => {

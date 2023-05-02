@@ -18,31 +18,52 @@ const getDeal = asyncHandler(async (req, res) => {
   res.status(200).json({ data: deal });
 });
 const getDeals = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const {
+    filters,
+    dataFilters,
+    search,
+    sort,
+    limit,
+    select,
+    count,
+    start,
+    data,
+  } = req.query;
 
   let deals;
+  let total = 0;
+  let sortObj;
+
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
   if (data) {
-    deals = await Deal_Model.find(filters || {})
+    deals = await Deal_Model.find(dataFilters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    deals = await Deal_Model.count(filters || search || {})
+    total = await Deal_Model.count(dataFilters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (search) {
     deals = await Deal_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
-  res.status(200).json({ data: deals });
+  res.status(200).json({ data: deals, meta: { total } });
 });
 
 const updateDealStage = asyncHandler(async (req, res) => {

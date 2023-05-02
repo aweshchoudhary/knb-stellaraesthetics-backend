@@ -49,7 +49,6 @@ const {
   getPipelineById,
   updatePipeline,
   deletePipelineById,
-  getPipelines,
 } = require("../controllers/pipline_controller");
 const {
   addFile,

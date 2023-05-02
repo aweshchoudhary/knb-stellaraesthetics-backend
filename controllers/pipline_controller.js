@@ -4,31 +4,53 @@ const { deletePipeline } = require("../helper/DeleteHelper");
 const Stage_Model = require("../models/Stage_Model");
 
 const getPipelines = AsyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const {
+    filters,
+    search,
+    sort,
+    limit,
+    select,
+    count,
+    start,
+    data,
+    dataFilters,
+  } = req.query;
 
   let pipelines;
+  let total = 0;
+  let sortObj;
+
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
+
   if (data) {
-    pipelines = await Pipeline_Model.find(filters || {})
+    pipelines = await Pipeline_Model.find(dataFilters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    pipelines = await Pipeline_Model.count(filters || search || {})
+    total = await Pipeline_Model.count(dataFilters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (search) {
     pipelines = await Pipeline_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
-  res.status(200).json({ data: pipelines });
+  res.status(200).json({ data: pipelines, meta: { total } });
 });
 
 const getPipelineById = AsyncHandler(async (req, res) => {

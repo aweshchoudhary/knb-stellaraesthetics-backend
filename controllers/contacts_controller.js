@@ -7,35 +7,55 @@ const createContact = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "client has been created", data: client });
 });
 const getContacts = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const {
+    datafilters,
+    filters,
+    search,
+    sort,
+    limit,
+    select,
+    count,
+    start,
+    data,
+  } = req.query;
 
   let contacts;
-  let total;
+  let total = 0;
+  let sortObj;
 
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
+
+  console.log(filters);
   if (data) {
-    contacts = await Contact_Model.find(filters || {})
+    contacts = await Contact_Model.find(datafilters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    contacts = await Contact_Model.count(filters || search || {})
+    total = await Contact_Model.count(filters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
-    total = contacts;
   }
   if (search) {
     contacts = await Contact_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   res.status(200).json({
-    data: clientsData,
+    data: contacts,
     meta: { total },
   });
 });

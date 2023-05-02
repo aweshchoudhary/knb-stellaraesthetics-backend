@@ -3,32 +3,43 @@ const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
 const getActivities = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start } = req.query;
+  const { dataFilters, search, sort, limit, select, count, start, data } =
+    req.query;
 
   let activities;
+  let total = 0;
+  let sortObj;
 
+  if (sort) {
+    const sortArr = JSON.parse(sort);
+    sortArr.forEach((item) => {
+      sortObj = {
+        [item.id]: item.desc ? "desc" : "asc",
+      };
+    });
+  }
   if (data) {
-    activities = await Activity_Model.find(filters || {})
+    activities = await Activity_Model.find(dataFilters || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    activities = await Activity_Model.count(filters || search || {})
+    total = await Activity_Model.count(dataFilters || search || {})
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
   if (search) {
     activities = await Activity_Model.find({ $text: { $search: search } })
       .limit(limit || 25)
       .select(select)
-      .sort(sort)
+      .sort(sortObj)
       .skip(start || 0);
   }
-  res.status(200).json({ data: activities });
+  res.status(200).json({ data: activities, meta: { total } });
 });
 const getActivityById = asyncHandler(async (req, res) => {
   const { id } = req.params;
