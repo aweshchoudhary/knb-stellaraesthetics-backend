@@ -56,12 +56,22 @@ const {
   deleteFile,
   getAllFileInfo,
 } = require("../controllers/file_controller");
+
+const passportJWT = require("../auth/passport-jwt");
 const upload = require("../apps/multer");
 
 // PIPELINE ENDPOINTS
-router.post("/pipeline/add", createPipeline);
+router.post(
+  "/pipeline/add",
+  passportJWT.authenticate("jwt", { session: false }),
+  createPipeline
+);
 router.get("/pipeline/get-pipelines/", getPipelines);
-router.get("/pipeline/get-pipeline/:id", getPipelineById);
+router.get(
+  "/pipeline/get-pipeline/:id",
+  passportJWT.authenticate("jwt", { session: false }),
+  getPipelineById
+);
 router.put("/pipeline/update/:id", updatePipeline);
 router.delete("/pipeline/delete/:id", deletePipelineById);
 
