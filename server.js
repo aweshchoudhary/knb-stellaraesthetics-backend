@@ -19,10 +19,7 @@ dotenv.config();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://u92x7hco3fvb.stellaraesthetics.in",
-    ],
+    origin: ["http://localhost:5173", "https://knb-stellaraesthetics.in"],
     credentials: true,
   })
 );
