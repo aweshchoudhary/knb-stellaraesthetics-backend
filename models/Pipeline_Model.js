@@ -7,9 +7,15 @@ const PipelineSchema = new mongoose.Schema(
     stages: [String],
     deals: [String],
     product_service: String,
+    owner: { type: String, required: true },
+    assignees: [String],
   },
   { timestamps: true }
 );
+
+PipelineSchema.index({
+  name: "text",
+});
 
 const PiplineModel = mongoose.model("Pipeline", PipelineSchema);
 

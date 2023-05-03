@@ -1,43 +1,43 @@
 const AsyncHandler = require("express-async-handler");
 const Pipeline_Model = require("../models/Pipeline_Model");
 const { deletePipeline } = require("../helper/DeleteHelper");
-const Stage_Model = require("../models/Stage_Model");
 
 const getPipelines = AsyncHandler(async (req, res) => {
-  const {
-    filters,
-    search,
-    sort,
-    limit,
-    select,
-    count,
-    start,
-    data,
-    dataFilters,
-  } = req.query;
+  const { filters, search, sort, limit, select, count, start, data } =
+    req.query;
 
   let pipelines;
   let total = 0;
   let sortObj;
+  let filtersObj = {};
 
+  if (filters) {
+    const filtersArr = JSON.parse(filters);
+    filtersArr.forEach((item) => {
+      filtersObj = {
+        ...filtersObj,
+        [item.id]: item.value,
+      };
+    });
+  }
   if (sort) {
     const sortArr = JSON.parse(sort);
     sortArr.forEach((item) => {
       sortObj = {
+        ...sortObj,
         [item.id]: item.desc ? "desc" : "asc",
       };
     });
   }
-
   if (data) {
-    pipelines = await Pipeline_Model.find(dataFilters || {})
+    pipelines = await Pipeline_Model.find(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    total = await Pipeline_Model.count(dataFilters || search || {})
+    total = await Pipeline_Model.count(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
@@ -50,6 +50,7 @@ const getPipelines = AsyncHandler(async (req, res) => {
       .sort(sortObj)
       .skip(start || 0);
   }
+
   res.status(200).json({ data: pipelines, meta: { total } });
 });
 

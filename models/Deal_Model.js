@@ -4,18 +4,17 @@ const Deal_Schema = new mongoose.Schema(
   {
     title: String,
     desc: String,
-    // value: Number,
-    // currency: String,
+    value: Number,
+    currency: String,
     product_service: [String],
     currentStage: String,
-    history: {},
     label: String,
-    status: { type: String, default: "open" },
     pipelineId: String,
     expectedClosingDate: Date,
     contacts: [String],
     owner: String,
     assingees: [String],
+    status: { type: String, default: "open" },
   },
   { timestamps: true }
 );

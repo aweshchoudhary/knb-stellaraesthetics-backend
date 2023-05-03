@@ -1,41 +1,44 @@
+const { deleteDeals } = require("../helper/DeleteHelper");
 const Stage_Model = require("../models/Stage_Model");
 const asyncHandler = require("express-async-handler");
 
 // Stage Functions
 const getStages = asyncHandler(async (req, res) => {
-  const {
-    filters,
-    search,
-    sort,
-    limit,
-    select,
-    count,
-    start,
-    data,
-    dataFilters,
-  } = req.query;
+  const { filters, search, sort, limit, select, count, start, data } =
+    req.query;
 
   let stages;
   let total = 0;
   let sortObj;
+  let filtersObj = {};
 
+  if (filters) {
+    const filtersArr = JSON.parse(filters);
+    filtersArr.forEach((item) => {
+      filtersObj = {
+        ...filtersObj,
+        [item.id]: item.value,
+      };
+    });
+  }
   if (sort) {
     const sortArr = JSON.parse(sort);
     sortArr.forEach((item) => {
       sortObj = {
+        ...sortObj,
         [item.id]: item.desc ? "desc" : "asc",
       };
     });
   }
   if (data) {
-    stages = await Stage_Model.find(filters || {})
+    stages = await Stage_Model.find(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    total = await Stage_Model.count(filters || search || {})
+    total = await Stage_Model.count(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
@@ -80,7 +83,7 @@ const createStage = asyncHandler(async (req, res) => {
 const deleteStage = asyncHandler(async (req, res) => {
   const { position, pipelineId } = req.params;
   // Delete the document with the given position number
-  await Stage_Model.findOneAndDelete({ position, pipelineId });
+  const stage = await Stage_Model.findOne({ position, pipelineId });
 
   // Update the position numbers of all the remaining documents
   const stagesToUpdate = await Stage_Model.find({
@@ -91,6 +94,9 @@ const deleteStage = asyncHandler(async (req, res) => {
     stagesToUpdate[i].position--;
     await stagesToUpdate[i].save();
   }
+  await deleteDeals(stage.id);
+  await stage.deleteOne();
+
   res.status(200).json({ message: "Stage Has Been Deleted" });
 });
 const updateStage = asyncHandler(async (req, res) => {

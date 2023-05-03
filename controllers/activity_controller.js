@@ -3,30 +3,41 @@ const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
 const getActivities = asyncHandler(async (req, res) => {
-  const { dataFilters, search, sort, limit, select, count, start, data } =
+  const { filters, search, sort, limit, select, count, start, data } =
     req.query;
 
   let activities;
   let total = 0;
   let sortObj;
+  let filtersObj = {};
 
+  if (filters) {
+    const filtersArr = JSON.parse(filters);
+    filtersArr.forEach((item) => {
+      filtersObj = {
+        ...filtersObj,
+        [item.id]: item.value,
+      };
+    });
+  }
   if (sort) {
     const sortArr = JSON.parse(sort);
     sortArr.forEach((item) => {
       sortObj = {
+        ...sortObj,
         [item.id]: item.desc ? "desc" : "asc",
       };
     });
   }
   if (data) {
-    activities = await Activity_Model.find(dataFilters || {})
+    activities = await Activity_Model.find(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
       .skip(start || 0);
   }
   if (count) {
-    total = await Activity_Model.count(dataFilters || search || {})
+    total = await Activity_Model.count(filtersObj)
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
