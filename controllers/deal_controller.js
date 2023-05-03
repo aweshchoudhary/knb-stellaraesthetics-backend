@@ -79,26 +79,26 @@ const getDeals = asyncHandler(async (req, res) => {
 const updateDealStage = asyncHandler(async (req, res) => {
   const { newStageId, prevStageId, dealId } = req.body;
   // // Remove deal id from previous stage
-  await Deal_Model.findByIdAndUpdate(prevStageId, {
-    $pull: { items: dealId },
+  await Stage_Model.findByIdAndUpdate(prevStageId, {
+    $pull: { deals: dealId },
   });
   // add deal id to new stage
-  await Deal_Model.findByIdAndUpdate(newStageId, {
-    $push: { items: dealId },
+  await Stage_Model.findByIdAndUpdate(newStageId, {
+    $push: { deals: dealId },
   });
   // update deal stage
   const deal = await Deal_Model.findById(dealId);
   deal.currentStage = newStageId;
-  let isExists = false;
-  deal.deals.forEach((stage) => {
-    if (stage.id === newStageId) {
-      stage.active = true;
-      isExists = true;
-    } else {
-      stage.active = false;
-    }
-  });
-  !isExists && deal.deals.push({ _id: newStageId });
+  // let isExists = false;
+  // deal.stages.forEach((stage) => {
+  //   if (stage.id === newStageId) {
+  //     stage.active = true;
+  //     isExists = true;
+  //   } else {
+  //     stage.active = false;
+  //   }
+  // });
+  // !isExists && deal.stages.push({ _id: newStageId });
   await deal.save();
   res.status(200).json({ message: "stage has been changed" });
 });
