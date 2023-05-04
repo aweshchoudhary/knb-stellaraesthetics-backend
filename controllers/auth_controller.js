@@ -47,27 +47,29 @@ const login = asyncHandler(async (req, res) => {
 
   const isEmail = user.search("@");
 
-  const loggedUser = await User.findOne(
+  const foundUser = await User.findOne(
     isEmail !== -1 ? { email: user } : { username: user }
   );
 
-  if (!loggedUser) {
+  if (!foundUser) {
     return res.status(404).json({ message: "Email or Username incorrect" });
   }
-  const isPasswordCorrect = compareSync(password, loggedUser.password);
+  const isPasswordCorrect = compareSync(password, foundUser.password);
 
   if (!isPasswordCorrect) {
     return res.status(403).json({ message: "Password is incorrect" });
   }
-
   const accessToken = jwt.sign(
-    { username: loggedUser.username, id: loggedUser.id },
+    {
+      username: foundUser.username,
+      id: foundUser.id,
+    },
     process.env.JWT_SECRET_KEY,
     { expiresIn: "30d" }
   );
 
   const refreshToken = jwt.sign(
-    { username: loggedUser.username, id: loggedUser.id },
+    { username: foundUser.username, id: foundUser.id },
     process.env.JWT_SECRET_KEY,
     { expiresIn: "60d" }
   );

@@ -13,7 +13,8 @@ const cookieExtractor = (req) => {
 };
 
 const options = {};
-options.jwtFromRequest = ExtractJWT.fromAuthHeaderAsBearerToken();
+options.jwtFromRequest =
+  ExtractJWT.fromAuthHeaderAsBearerToken() || cookieExtractor();
 options.secretOrKey = process.env.JWT_SECRET_KEY;
 options.issuer = process.env.ADMIN_EMAIL;
 options.audience = process.env.WEB_URL;

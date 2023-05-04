@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const ROLES_LIST = require("../config/roles_list");
 
 //------------ User Schema ------------//
 const UserSchema = new mongoose.Schema(
@@ -19,14 +20,12 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    // verified: {
-    //   type: Boolean,
-    //   default: false,
-    // },
-    // resetLink: {
-    //   type: String,
-    //   default: "",
-    // },
+    role: {
+      type: String,
+      enum: ROLES_LIST,
+      required: true,
+      default: "user",
+    },
   },
   { timestamps: true }
 );

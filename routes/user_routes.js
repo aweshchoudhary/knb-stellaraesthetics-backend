@@ -5,28 +5,11 @@ const {
   deleteUser,
   getMe,
 } = require("../controllers/user_controller");
-const passportJWT = require("../auth/passport-jwt");
 
 // USER ENDPOINTS
-router.get(
-  "/user/getme",
-  passportJWT.authenticate("jwt", { session: false }),
-  getMe
-);
-router.get(
-  "/user/:id",
-  passportJWT.authenticate("jwt", { session: false }),
-  getUser
-);
-router.delete(
-  "/user/:id",
-  passportJWT.authenticate("jwt", { session: false }),
-  updateUser
-);
-router.put(
-  "/user/:id",
-  passportJWT.authenticate("jwt", { session: false }),
-  deleteUser
-);
+router.get("/getme", getMe);
+router.get("/:id", getUser);
+router.delete("/:id", updateUser);
+router.put("/:id", deleteUser);
 
 module.exports = router;
