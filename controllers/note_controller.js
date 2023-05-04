@@ -1,3 +1,4 @@
+const verifyPipelineUser = require("../middlewares/verifyPipelineUser");
 const Note_Model = require("../models/Note_Model");
 const asyncHandler = require("express-async-handler");
 
@@ -59,15 +60,23 @@ const getNotesById = asyncHandler(async (req, res) => {
   const note = await Note_Model.findById(id);
   res.status(200).json({ data: note });
 });
-
 const addNote = asyncHandler(async (req, res) => {
-  const { cardId, noteBody } = req.body;
+  const { deals, noteBody, pipelineId } = req.body;
+  const user = req.user;
+  const isVerifiedUser = await verifyPipelineUser(pipelineId, user._id);
+
+  if (!isVerifiedUser)
+    return res
+      .status(401)
+      .json({ message: "You don't have access to this pipeline" });
+
   const newNote = new Note_Model({
     body: noteBody,
-    cardId,
+    deals,
   });
+
   const note = await newNote.save();
-  res.status(200).json({ message: "Note has been added to card", data: note });
+  res.status(200).json({ message: "Note has been added to deal", data: note });
 });
 const updateNote = asyncHandler(async (req, res) => {
   const { id } = req.params;

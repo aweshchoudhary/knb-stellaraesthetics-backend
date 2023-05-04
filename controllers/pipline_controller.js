@@ -1,28 +1,12 @@
 const AsyncHandler = require("express-async-handler");
 const Pipeline_Model = require("../models/Pipeline_Model");
 const { deletePipeline } = require("../helper/DeleteHelper");
+const verifyPipelineUser = require("../middlewares/verifyPipelineUser");
 
-const verifyUser = async (pipelineId, userId) => {
-  let pipeline = await Pipeline_Model.findOne({
-    _id: pipelineId,
-    owner: userId,
-  });
-
-  if (!pipeline)
-    pipeline = await Pipeline_Model.findOne({
-      _id: pipelineId,
-      assignees: { $in: userId },
-    });
-
-  if (!pipeline) return null;
-
-  return pipeline._id;
-};
-
-const verifyPipelineUser = AsyncHandler(async (req, res) => {
+const checkUserExistsInPipeline = AsyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = req.user;
-  const pipelineId = await verifyUser(id, user.id);
+  const pipelineId = await verifyPipelineUser(id, user.id);
   res.status(200).json({ viewOnly: !pipelineId ? true : false });
 });
 
@@ -100,7 +84,7 @@ const updatePipeline = AsyncHandler(async (req, res) => {
   const user = req.user;
   const { id } = req.params;
 
-  const pipelineId = await verifyUser(id, user.id);
+  const pipelineId = await verifyPipelineUser(id, user.id);
 
   if (!pipelineId)
     return res.status(401).json({ message: "You don't have an access" });
@@ -116,7 +100,7 @@ const deletePipelineById = AsyncHandler(async (req, res) => {
   const user = req.user;
   const { id } = req.params;
 
-  const pipelineId = await verifyUser(id, user.id);
+  const pipelineId = await verifyPipelineUser(id, user.id);
 
   if (!pipelineId)
     return res.status(401).json({ message: "You don't have an access" });
@@ -131,5 +115,5 @@ module.exports = {
   updatePipeline,
   deletePipelineById,
   getPipelines,
-  verifyPipelineUser,
+  checkUserExistsInPipeline,
 };

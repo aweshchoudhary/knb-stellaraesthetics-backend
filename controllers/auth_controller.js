@@ -31,6 +31,7 @@ const register = asyncHandler(async (req, res) => {
     fullname,
     username,
     email,
+    role: "member",
     password: hashSync(password, 10),
   });
 

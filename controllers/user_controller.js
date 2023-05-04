@@ -9,6 +9,7 @@ const getMe = asyncHandler(async (req, res) => {
     fullname: user.fullname,
     username: user.username,
     email: user.email,
+    role: user.role,
   };
   res.status(200).json({ data: filteredUser });
 });

@@ -3,8 +3,9 @@ const mongoose = require("mongoose");
 const Note_Schema = new mongoose.Schema(
   {
     body: String,
-    dealId: [{ type: String, required: true }],
-    creator: String,
+    deals: [{ type: String, required: true }],
+    contacts: [{ type: String, required: true }],
+    creator: { type: String, required: true },
   },
   { timestamps: true }
 );

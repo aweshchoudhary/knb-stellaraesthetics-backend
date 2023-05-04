@@ -1,19 +1,19 @@
 const router = require("express").Router();
-const ROLES_LIST = require("../config/roles_list");
 const {
   createPipeline,
   getPipelines,
   getPipelineById,
   updatePipeline,
   deletePipelineById,
-  verifyPipelineUser,
+  checkUserExistsInPipeline,
 } = require("../controllers/pipline_controller");
+const verifyRoles = require("../middlewares/verifyRoles");
 
 // PIPELINE ENDPOINTS
 router.get("/get-pipelines/", getPipelines);
-router.get("/verify-user/:id", verifyPipelineUser);
+router.get("/verify-user/:id", checkUserExistsInPipeline);
 router.get("/get-pipeline/:id", getPipelineById);
-router.post("/add", createPipeline);
+router.post("/add", verifyRoles("admin", "editor"), createPipeline);
 router.put("/update/:id", updatePipeline);
 router.delete("/delete/:id", deletePipelineById);
 
