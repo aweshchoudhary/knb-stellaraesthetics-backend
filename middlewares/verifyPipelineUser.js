@@ -1,18 +1,22 @@
+const Pipeline_Model = require("../models/Pipeline_Model");
+
 const verifyUser = async (pipelineId, userId) => {
-  let pipeline = await Pipeline_Model.findOne({
+  const pipeline = await Pipeline_Model.findOne({
     _id: pipelineId,
-    owner: userId,
-  });
+    $or: [{ owner: userId }, { assignees: { $in: userId } }],
+  }).select("id owner assignees");
 
-  if (!pipeline)
-    pipeline = await Pipeline_Model.findOne({
-      _id: pipelineId,
-      assignees: { $in: userId },
-    });
+  if (!pipeline) {
+    return false;
+  }
 
-  if (!pipeline) return null;
+  if (pipeline.owner === userId) {
+    return { pipelineId: pipeline.id, userRole: "owner" };
+  } else {
+    return false;
+  }
 
-  return pipeline._id;
+  return { pipelineId: pipeline.id, userRole: "assignee" };
 };
 
 module.exports = verifyUser;

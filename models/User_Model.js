@@ -30,6 +30,12 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+UserSchema.index({
+  fullname: "text",
+  username: "text",
+  email: "text",
+});
+
 const User = mongoose.model("User", UserSchema);
 
 module.exports = User;
