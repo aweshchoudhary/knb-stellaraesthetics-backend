@@ -4,6 +4,7 @@ const Deal_Model = require("../models/Deal_Model");
 const File_Model = require("../models/File_Model");
 const Activity_Model = require("../models/Activity_Model");
 const Note_Model = require("../models/Note_Model");
+const fs = require("fs");
 
 async function deletePipeline(id) {
   const pipeline = await Pipeline_Model.findById(id).select("_id");
@@ -33,7 +34,12 @@ async function deleteDeals(stageId) {
 }
 
 async function deleteFiles(cardId) {
-  await File_Model.deleteMany({ cardId });
+  const files = await File_Model.find({ cardId });
+  files.forEach(async (file) => {
+    fs.unlink("public/uploads/" + file.name, async () => {
+      await file.deleteOne();
+    });
+  });
 }
 async function deleteActivities(cardId) {
   await Activity_Model.deleteMany({ cardId });

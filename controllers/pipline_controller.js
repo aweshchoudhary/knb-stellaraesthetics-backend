@@ -104,7 +104,7 @@ const assignPipelineUser = AsyncHandler(async (req, res) => {
       .status(401)
       .json({ message: "You don't have an access to this pipeline" });
 
-  if (userRole === "owner")
+  if (userRole !== "owner")
     return res.status(401).json({ message: "Only Owner can assign a user" });
 
   const pipeline = await Pipeline_Model.findById(pipelineId);
@@ -128,8 +128,6 @@ const removePipelineUser = AsyncHandler(async (req, res) => {
   const { userId } = req.body;
 
   const { pipelineId, userRole } = await verifyPipelineUser(id, user.id);
-  console.log(pipelineId);
-  console.log(userRole);
 
   if (!pipelineId || !userRole)
     return res
@@ -163,9 +161,9 @@ const transferOwnerShip = AsyncHandler(async (req, res) => {
       .status(401)
       .json({ message: "Only Owner can transfer ownership" });
 
-  await Pipeline_Model.findByIdAndUpdate(pipelineId, {
-    owner: newOwnerId,
-  });
+  const updatePipeline = await Pipeline_Model.findById(pipelineId);
+  updatePipeline.owner = newOwnerId;
+  updatePipeline.save();
 
   res.status(200).json({ message: "Ownership transfered successfully" });
 });

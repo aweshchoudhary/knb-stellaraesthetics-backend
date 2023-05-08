@@ -9,7 +9,7 @@ const createDeal = asyncHandler(async (req, res) => {
   const deal = await newDeal.save();
 
   const stage = await Stage_Model.findById(req.body.currentStage);
-  stage.items.push(deal._id);
+  stage.deals.push(deal._id);
   await stage.save();
 
   const pipeline = await Pipeline_Model.findById(stage.pipelineId);
@@ -24,6 +24,7 @@ const getDeal = asyncHandler(async (req, res) => {
   const deal = await Deal_Model.findById(id);
   res.status(200).json({ data: deal });
 });
+
 const getDeals = asyncHandler(async (req, res) => {
   const { filters, search, sort, limit, select, count, start, data } =
     req.query;
@@ -89,19 +90,11 @@ const updateDealStage = asyncHandler(async (req, res) => {
   // update deal stage
   const deal = await Deal_Model.findById(dealId);
   deal.currentStage = newStageId;
-  // let isExists = false;
-  // deal.stages.forEach((stage) => {
-  //   if (stage.id === newStageId) {
-  //     stage.active = true;
-  //     isExists = true;
-  //   } else {
-  //     stage.active = false;
-  //   }
-  // });
-  // !isExists && deal.stages.push({ _id: newStageId });
   await deal.save();
+
   res.status(200).json({ message: "stage has been changed" });
 });
+
 const updateDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { update } = req.body;

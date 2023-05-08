@@ -2,6 +2,7 @@ const express = require("express");
 const passport = require("passport");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const path = require("path");
 
 const connect_db = require("./config/connect_db");
 const activity_routes = require("./routes/activity_routes");
@@ -37,7 +38,7 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(passport.initialize());

@@ -1,15 +1,16 @@
 const asyncHandler = require("express-async-handler");
 const Product_Service_Model = require("../models/Product_Service_Model");
+const fs = require("fs");
+const path = require("path");
 
 const createProduct_Service = asyncHandler(async (req, res) => {
-  console.log(req.body);
-  if (req.body?.image && req.file) {
+  if (req.file) {
     const { filename, path, size } = req.file;
     const newProduct_Service = new Product_Service_Model({
       ...req.body,
       image: {
         name: filename,
-        path,
+        path: path.split("public")[1],
         size,
       },
     });
@@ -44,6 +45,8 @@ const getProduct_ServiceById = asyncHandler(async (req, res) => {
 });
 const updateProduct_Service = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  if (req.body.image && req.file) {
+  }
   await Product_Service_Model.findByIdAndUpdate(id, {
     ...req.body,
   });
@@ -51,7 +54,24 @@ const updateProduct_Service = asyncHandler(async (req, res) => {
 });
 const deleteProduct_Service = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await Product_Service_Model.findByIdAndDelete(id);
+
+  const product_service = await Product_Service_Model.findById(id);
+  if (!product_service)
+    res.status(404).json({ message: "Item has not been found" });
+
+  if (product_service?.image?.name) {
+    const path = "public/uploads/" + product_service.image.name;
+    const isFileExists = fs.existsSync(path);
+    isFileExists &&
+      fs.unlink(path, async () => {
+        await product_service.deleteOne();
+      });
+    return res
+      .status(200)
+      .json({ message: "Product_Service has been deleted" });
+  }
+
+  await product_service.deleteOne();
   res.status(200).json({ message: "Product_Service has been deleted" });
 });
 

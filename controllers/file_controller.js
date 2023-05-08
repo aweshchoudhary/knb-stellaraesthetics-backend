@@ -31,7 +31,7 @@ const downloadFile = asyncHandler(async (req, res) => {
 const deleteFile = asyncHandler(async (req, res) => {
   const { fileId } = req.params;
   const fileInfo = await File_Model.findById(fileId);
-  await fs.unlink("public/uploads/" + fileInfo.name, async () => {
+  fs.unlink("public/uploads/" + fileInfo.name, async () => {
     await fileInfo.deleteOne();
   });
   res.status(200).json({ message: "File has been deleted" });

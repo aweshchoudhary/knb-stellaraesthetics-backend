@@ -4,7 +4,7 @@ const asyncHandler = require("express-async-handler");
 const getMe = asyncHandler(async (req, res) => {
   const loggedUser = req.user;
   const user = await User_Model.findById(loggedUser._id).select(
-    "_id fullnam username email role"
+    "_id fullname username email role"
   );
   res.status(200).json({ data: user });
 });
@@ -16,6 +16,7 @@ const getUser = asyncHandler(async (req, res) => {
   );
   if (!user)
     return res.status(404).json({ message: "User not found or Deleted" });
+
   res.status(200).json({ data: user });
 });
 
