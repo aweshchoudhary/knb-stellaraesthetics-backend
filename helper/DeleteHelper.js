@@ -53,4 +53,6 @@ module.exports = {
   deleteStages,
   deleteDeals,
   deleteFiles,
+  deleteActivities,
+  deleteNotes,
 };

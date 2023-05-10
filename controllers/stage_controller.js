@@ -54,9 +54,26 @@ const getStages = asyncHandler(async (req, res) => {
   res.status(200).json({ data: stages, meta: { total } });
 });
 const getStageById = asyncHandler(async (req, res) => {
-  const { id } = req.query;
-  const stage = await Stage_Model.findById(id);
-  res.status(200).json({ data: stage });
+  const { id } = req.params;
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing stage ID" });
+  }
+
+  const stage = await Stage_Model.findById(id)
+    .populate(populate)
+    .select(select);
+
+  if (!stage) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: stage });
 });
 const createStage = asyncHandler(async (req, res) => {
   const { name, position, pipelineId } = req.body;

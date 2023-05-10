@@ -7,9 +7,15 @@ const File_Schema = new mongoose.Schema(
     type: String,
     url: String,
     uploader: String,
-    sent_to_contacts: [String],
-    sent_to_users: [String],
-    dealId: [String],
+    sent_to_contacts: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Contact" },
+    ],
+    sent_to_users: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    ],
+    dealId: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Deal" },
+    ],
   },
   { timestamps: true }
 );

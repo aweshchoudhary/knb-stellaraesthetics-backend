@@ -3,9 +3,17 @@ const mongoose = require("mongoose");
 const Note_Schema = new mongoose.Schema(
   {
     body: String,
-    deals: [{ type: String, required: true }],
-    contacts: [{ type: String, required: true }],
-    creator: { type: String, required: true },
+    deals: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Deal" },
+    ],
+    contacts: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Contact" },
+    ],
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
   },
   { timestamps: true }
 );

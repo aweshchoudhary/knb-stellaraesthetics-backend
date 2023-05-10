@@ -9,11 +9,8 @@ const verifyUser = async (pipelineId, userId) => {
   if (!pipeline) {
     return false;
   }
-
-  if (pipeline.owner === userId) {
+  if (pipeline.owner.toHexString() === userId) {
     return { pipelineId: pipeline.id, userRole: "owner" };
-  } else {
-    return false;
   }
 
   return { pipelineId: pipeline.id, userRole: "assignee" };

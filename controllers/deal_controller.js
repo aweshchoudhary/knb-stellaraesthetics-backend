@@ -2,6 +2,11 @@ const Deal_Model = require("../models/Deal_Model");
 const Pipeline_Model = require("../models/Pipeline_Model");
 const Stage_Model = require("../models/Stage_Model");
 const asyncHandler = require("express-async-handler");
+const {
+  deleteFiles,
+  deleteActivities,
+  deleteNotes,
+} = require("../helper/DeleteHelper");
 
 // Deal Functions
 const createDeal = asyncHandler(async (req, res) => {
@@ -21,8 +26,21 @@ const createDeal = asyncHandler(async (req, res) => {
 
 const getDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const deal = await Deal_Model.findById(id);
-  res.status(200).json({ data: deal });
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ success: false, message: "Missing deal ID" });
+  }
+
+  const deal = await Deal_Model.findById(id).populate(populate).select(select);
+
+  if (!deal) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: deal });
 });
 
 const getDeals = asyncHandler(async (req, res) => {
@@ -105,10 +123,20 @@ const updateDeal = asyncHandler(async (req, res) => {
 const deleteDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const deal = await Deal_Model.findById(id);
-  await deleteFiles(deal.id);
-  await deleteActivities(deal.id);
-  await deleteNotes(deal.id);
+  if (!deal) {
+    res.status(404).json({ message: "Deal Not Found" });
+    return;
+  }
 
+  await Promise.all([
+    deleteFiles(deal.id),
+    deleteActivities(deal.id),
+    deleteNotes(deal.id),
+  ]);
+
+  await Stage_Model.findByIdAndUpdate(deal.currentStage, {
+    $pull: { deals: id },
+  });
   await deal.deleteOne();
 
   res.status(200).json({ message: "Deal Has Been Deleted" });

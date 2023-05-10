@@ -11,13 +11,21 @@ const getMe = asyncHandler(async (req, res) => {
 
 const getUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const user = await User_Model.findById(id).select(
-    "fullname username email role"
-  );
-  if (!user)
-    return res.status(404).json({ message: "User not found or Deleted" });
+  const { select, populate } = req.query;
 
-  res.status(200).json({ data: user });
+  if (!id) {
+    return res.status(400).json({ success: false, message: "Missing user ID" });
+  }
+
+  const user = await User_Model.findById(id).populate(populate).select(select);
+
+  if (!user) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: user });
 });
 
 const getUsers = asyncHandler(async (req, res) => {

@@ -7,6 +7,8 @@ const checkUserExistsInPipeline = AsyncHandler(async (req, res) => {
   const { id } = req.params;
   const user = req.user;
   const { pipelineId, userRole } = await verifyPipelineUser(id, user.id);
+  // console.log(id);
+  // console.log(userRole);
   res.status(200).json({ viewOnly: !pipelineId ? true : false, userRole });
 });
 
@@ -64,8 +66,25 @@ const getPipelines = AsyncHandler(async (req, res) => {
 
 const getPipelineById = AsyncHandler(async (req, res) => {
   const { id } = req.params;
-  const pipeline = await Pipeline_Model.findById(id);
-  res.status(200).json({ data: pipeline });
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing pipeline ID" });
+  }
+
+  const pipeline = await Pipeline_Model.findById(id)
+    .populate(populate)
+    .select(select);
+
+  if (!pipeline) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: pipeline });
 });
 
 const createPipeline = AsyncHandler(async (req, res) => {

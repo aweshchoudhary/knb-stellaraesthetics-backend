@@ -57,8 +57,21 @@ const getNotes = asyncHandler(async (req, res) => {
 
 const getNotesById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const note = await Note_Model.findById(id);
-  res.status(200).json({ data: note });
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res.status(400).json({ success: false, message: "Missing note ID" });
+  }
+
+  const note = await Note_Model.findById(id).populate(populate).select(select);
+
+  if (!note) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: note });
 });
 const addNote = asyncHandler(async (req, res) => {
   const { deals, noteBody, pipelineId } = req.body;

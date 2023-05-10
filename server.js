@@ -16,6 +16,7 @@ const stage_routes = require("./routes/stage_routes");
 const auth_routes = require("./routes/auth_routes");
 const user_routes = require("./routes/user_routes");
 const product_service_routes = require("./routes/product_service_routes");
+const deal_product_service_routes = require("./routes/deal_product_service_routes");
 
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
@@ -94,6 +95,11 @@ app.use(
   "/api/product-service",
   passportJWT.authenticate("jwt", { session: false }),
   product_service_routes
+);
+app.use(
+  "/api/deal-product-service",
+  passportJWT.authenticate("jwt", { session: false }),
+  deal_product_service_routes
 );
 app.use("/auth", auth_routes);
 

@@ -54,8 +54,25 @@ const getActivities = asyncHandler(async (req, res) => {
 });
 const getActivityById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const activity = await Activity_Model.findById(id);
-  res.status(200).json({ data: activity });
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing activity ID" });
+  }
+
+  const activity = await Activity_Model.findById(id)
+    .populate(populate)
+    .select(select);
+
+  if (!activity) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: activity });
 });
 
 const addActivity = asyncHandler(async (req, res) => {

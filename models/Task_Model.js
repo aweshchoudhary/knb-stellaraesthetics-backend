@@ -8,11 +8,25 @@ const Activity_Schema = new mongoose.Schema(
     startDateTime: Date,
     endDateTime: Date,
     location: String,
-    performer: String,
-    dealId: [String],
-    contactId: String,
-    involved_contacts: [String],
-    involved_users: [String],
+    performer: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    dealId: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Deal" },
+    ],
+    contactId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Contact",
+    },
+    involved_contacts: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "COntact" },
+    ],
+    involved_users: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    ],
     completed_on: Date,
   },
   { timestamps: true }

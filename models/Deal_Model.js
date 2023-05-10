@@ -6,15 +6,37 @@ const Deal_Schema = new mongoose.Schema(
     desc: String,
     value: Number,
     currency: String,
-    product_service: [String],
     currentStage: String,
-    label: String,
-    pipelineId: String,
+    label: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Label",
+    },
     expectedClosingDate: Date,
-    contacts: [String],
-    owner: String,
-    assingees: [String],
     status: { type: String, default: "open" },
+    pipelineId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Pipeline",
+    },
+    contacts: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Contact" },
+    ],
+    items: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "ProductService",
+      },
+    ],
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    // assingees: [
+    //   { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    // ],
   },
   { timestamps: true }
 );

@@ -1,7 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Product_Service_Model = require("../models/Product_Service_Model");
 const fs = require("fs");
-const path = require("path");
 
 const createProduct_Service = asyncHandler(async (req, res) => {
   if (req.file) {
@@ -37,11 +36,25 @@ const getProduct_Services = asyncHandler(async (req, res) => {
 });
 const getProduct_ServiceById = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const product_service = await Product_Service_Model.findById(id);
-  res.status(200).json({
-    message: "Product_Service has been created",
-    data: product_service,
-  });
+  const { select, populate } = req.query;
+
+  if (!id) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Missing product_service ID" });
+  }
+
+  const product_service = await Product_Service_Model.findById(id)
+    .populate(populate)
+    .select(select);
+
+  if (!product_service) {
+    return res
+      .status(404)
+      .json({ success: false, message: "Activity not found" });
+  }
+
+  res.status(200).json({ success: true, data: product_service });
 });
 const updateProduct_Service = asyncHandler(async (req, res) => {
   const { id } = req.params;

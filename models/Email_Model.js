@@ -7,11 +7,25 @@ const Call_Schema = new mongoose.Schema(
     type: String,
     startDateTime: Date,
     endDateTime: Date,
-    sender: String,
-    receiver: String,
-    dealId: [String],
-    involved_contacts: [String],
-    involved_users: [String],
+    sender: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
+    },
+    receiver: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Contact",
+    },
+    dealId: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Deal" },
+    ],
+    involved_contacts: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Contact" },
+    ],
+    involved_users: [
+      { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
+    ],
     completed_on: Date,
   },
   { timestamps: true }

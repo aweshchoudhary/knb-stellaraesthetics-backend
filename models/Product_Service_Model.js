@@ -15,7 +15,11 @@ const Product_Service_Schema = new mongoose.Schema({
   qty: { type: Number, required: true },
   qty_type: { type: String, required: true },
   currency: { type: String, required: true },
-  creator: { type: String, required: true },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 Product_Service_Schema.index({});
