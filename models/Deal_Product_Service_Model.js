@@ -12,6 +12,7 @@ const Deal_Product_Service = new mongoose.Schema({
   qty_type: { type: String, required: true },
   discount: { type: Number },
   tax: { type: Number },
+  total: { type: Number, required: true },
   currency: { type: String, required: true },
 });
 
