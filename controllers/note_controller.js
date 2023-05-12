@@ -75,12 +75,6 @@ const getNotesById = asyncHandler(async (req, res) => {
 });
 const addNote = asyncHandler(async (req, res) => {
   const { deals, noteBody, pipelineId } = req.body;
-  const user = req.user;
-  const { pipelineId: pipeId } = await verifyPipelineUser(pipelineId, user.id);
-  if (!pipeId)
-    return res
-      .status(401)
-      .json({ message: "You don't have access to this pipeline" });
 
   const newNote = new Note_Model({
     body: noteBody,
