@@ -76,8 +76,7 @@ const getNotesById = asyncHandler(async (req, res) => {
 const addNote = asyncHandler(async (req, res) => {
   const { deals, noteBody, pipelineId } = req.body;
   const user = req.user;
-  const { pipeId } = await verifyPipelineUser(pipelineId, user._id);
-  console.log(pipelineId);
+  const { pipelineId: pipeId } = await verifyPipelineUser(pipelineId, user.id);
   if (!pipeId)
     return res
       .status(401)

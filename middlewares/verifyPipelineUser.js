@@ -4,10 +4,11 @@ const verifyUser = async (pipelineId, userId) => {
   const pipeline = await Pipeline_Model.findOne({
     _id: pipelineId,
     $or: [{ owner: userId }, { assignees: { $in: userId } }],
-  }).select("id owner assignees");
-
+  }).select("_id owner");
+  console.log(pipelineId);
+  console.log(userId);
   if (!pipeline) {
-    return false;
+    return { pipelineId: false, userRole: false };
   }
   if (pipeline.owner.toHexString() === userId) {
     return { pipelineId: pipeline.id, userRole: "owner" };
