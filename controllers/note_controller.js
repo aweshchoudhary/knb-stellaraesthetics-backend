@@ -1,5 +1,5 @@
-const verifyPipelineUser = require("../middlewares/verifyPipelineUser");
 const Note_Model = require("../models/Note_Model");
+const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
 // NOTES CONTROLLERS
@@ -74,14 +74,15 @@ const getNotesById = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: note });
 });
 const addNote = asyncHandler(async (req, res) => {
-  const { deals, noteBody, pipelineId } = req.body;
-
-  const newNote = new Note_Model({
-    body: noteBody,
-    deals,
-  });
-
+  const newNote = new Note_Model(req.body);
   const note = await newNote.save();
+
+  const updateDealPromises = note.deals.map(async (deal) => {
+    await Deal_Model.findByIdAndUpdate(deal.toHexString(), {
+      $push: { notes: note.id },
+    });
+  });
+  await Promise.all(updateDealPromises);
   res.status(200).json({ message: "Note has been added to deal", data: note });
 });
 const updateNote = asyncHandler(async (req, res) => {
@@ -94,7 +95,15 @@ const updateNote = asyncHandler(async (req, res) => {
 });
 const deleteNote = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await Note_Model.findByIdAndDelete(id);
+  const note = await Note_Model.findById(id);
+  const updateDealPromises = note.deals.map(async (deal) => {
+    await Deal_Model.findByIdAndUpdate(deal.toHexString(), {
+      $pull: { notes: note.id },
+    });
+  });
+  await Promise.all(updateDealPromises).then(
+    async () => await note.deleteOne()
+  );
   res.status(200).json({ message: "Note has been deleted" });
 });
 

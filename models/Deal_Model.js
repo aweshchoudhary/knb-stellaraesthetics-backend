@@ -29,14 +29,39 @@ const Deal_Schema = new mongoose.Schema(
         ref: "DealProductService",
       },
     ],
+    notes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Note",
+      },
+    ],
+    activities: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Activity",
+      },
+    ],
+    files: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "File",
+      },
+    ],
+    mails: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Mail",
+      },
+    ],
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },
-    // assingees: [
-    //   { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
-    // ],
   },
   { timestamps: true }
 );

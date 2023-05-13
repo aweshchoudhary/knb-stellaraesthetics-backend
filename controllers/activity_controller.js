@@ -6,50 +6,75 @@ const getActivities = asyncHandler(async (req, res) => {
   const { filters, search, sort, limit, select, count, start, data } =
     req.query;
 
+  const filtersObj = filters
+    ? JSON.parse(filters).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.value }),
+        {}
+      )
+    : {};
+  const sortObj = sort
+    ? JSON.parse(sort).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.desc ? "desc" : "asc" }),
+        {}
+      )
+    : {};
+
+  const buildQuery = (model, filtersObj, limit, select, sortObj, start) => {
+    return model
+      .find(filtersObj)
+      .limit(limit || 25)
+      .select(select)
+      .sort(sortObj)
+      .skip(start || 0);
+  };
+
   let activities;
   let total = 0;
-  let sortObj;
-  let filtersObj = {};
 
-  if (filters) {
-    const filtersArr = JSON.parse(filters);
-    filtersArr.forEach((item) => {
-      filtersObj = {
-        ...filtersObj,
-        [item.id]: item.value,
-      };
-    });
-  }
-  if (sort) {
-    const sortArr = JSON.parse(sort);
-    sortArr.forEach((item) => {
-      sortObj = {
-        ...sortObj,
-        [item.id]: item.desc ? "desc" : "asc",
-      };
-    });
-  }
+  const queries = [];
+
   if (data) {
-    activities = await Activity_Model.find(filtersObj)
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      buildQuery(Activity_Model, filtersObj, limit, select, sortObj, start)
+    );
   }
+
   if (count) {
-    total = await Activity_Model.count(filtersObj)
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      Activity_Model.countDocuments(filtersObj)
+        .limit(limit || 25)
+        .select(select)
+        .sort(sortObj)
+        .skip(start || 0)
+        .then((count) => {
+          total = count;
+        })
+    );
   }
+
   if (search) {
-    activities = await Activity_Model.find({ $text: { $search: search } })
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      buildQuery(
+        Activity_Model,
+        { $text: { $search: search } },
+        limit,
+        select,
+        sortObj,
+        start
+      )
+    );
   }
+
+  await Promise.all(queries)
+    .then((results) => {
+      if (data) {
+        [activities] = results;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
   res.status(200).json({ data: activities, meta: { total } });
 });
 const getActivityById = asyncHandler(async (req, res) => {
@@ -81,6 +106,13 @@ const addActivity = asyncHandler(async (req, res) => {
     ...data,
   });
   const activity = await newActivity.save();
+  const updateDealPromises = activity.deals.map(async (deal) => {
+    await Deal_Model.findByIdAndUpdate(deal.toHexString(), {
+      $push: { activities: activity.id },
+    });
+  });
+  await Promise.all(updateDealPromises);
+
   res
     .status(200)
     .json({ message: "Activity has been added to card", data: activity });
@@ -92,9 +124,20 @@ const updateActivity = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ message: "Activity has been updated" });
 });
+
 const deleteActivity = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  await Activity_Model.findByIdAndDelete(id);
+  const activity = await Activity_Model.findById(id);
+
+  const updateDealPromises = activity.deals.map(async (deal) => {
+    await Deal_Model.findByIdAndUpdate(deal.toHexString(), {
+      $pull: { activities: activity.id },
+    });
+  });
+  await Promise.all(updateDealPromises).then(
+    async () => await activity.deleteOne()
+  );
+
   res.status(200).json({ message: "Activity has been deleted" });
 });
 
