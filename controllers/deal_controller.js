@@ -144,8 +144,8 @@ const updateDealStage = asyncHandler(async (req, res) => {
 
 const updateDeal = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { update } = req.body;
-  await Deal_Model.findByIdAndUpdate(id, update);
+
+  await Deal_Model.findByIdAndUpdate(id, req.body);
   res.status(200).json({ message: "Deal Has Been Updated" });
 });
 

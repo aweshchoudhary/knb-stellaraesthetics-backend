@@ -4,11 +4,79 @@ const fs = require("fs");
 const path = require("path");
 
 const getAllFileInfo = asyncHandler(async (req, res) => {
-  const { cardId } = req.params;
-  const { populate } = req.query;
+  const { filters, search, sort, limit, select, count, start, data } =
+    req.query;
 
-  const fileInfos = await File_Model.find({ cardId }).populate(populate);
-  res.status(200).json({ data: fileInfos });
+  const filtersObj = filters
+    ? JSON.parse(filters).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.value }),
+        {}
+      )
+    : {};
+  const sortObj = sort
+    ? JSON.parse(sort).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.desc ? "desc" : "asc" }),
+        {}
+      )
+    : {};
+
+  const buildQuery = (model, filtersObj, limit, select, sortObj, start) => {
+    return model
+      .find(filtersObj)
+      .limit(limit || 25)
+      .select(select)
+      .sort(sortObj)
+      .skip(start || 0);
+  };
+
+  let files;
+  let total = 0;
+
+  const queries = [];
+
+  if (data) {
+    queries.push(
+      buildQuery(File_Model, filtersObj, limit, select, sortObj, start)
+    );
+  }
+
+  if (count) {
+    queries.push(
+      File_Model.countDocuments(filtersObj)
+        .limit(limit || 25)
+        .select(select)
+        .sort(sortObj)
+        .skip(start || 0)
+        .then((count) => {
+          total = count;
+        })
+    );
+  }
+
+  if (search) {
+    queries.push(
+      buildQuery(
+        File_Model,
+        { $text: { $search: search } },
+        limit,
+        select,
+        sortObj,
+        start
+      )
+    );
+  }
+
+  await Promise.all(queries)
+    .then((results) => {
+      if (data) {
+        [files] = results;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  res.status(200).json({ data: files, meta: { total } });
 });
 const addFile = asyncHandler(async (req, res) => {
   const { filename, path, size, mimetype } = req.file;

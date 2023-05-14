@@ -9,7 +9,7 @@ const {
 const upload = require("../apps/multer");
 
 router.post("/add", upload.single("file"), addFile);
-router.get("/get-fileinfos/:dealId", getAllFileInfo);
+router.get("/get-files", getAllFileInfo);
 router.get("/download/:filename", downloadFile);
 router.delete("/delete/:fileId", deleteFile);
 
