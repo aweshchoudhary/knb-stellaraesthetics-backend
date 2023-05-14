@@ -44,7 +44,7 @@ const getDeal = asyncHandler(async (req, res) => {
 });
 
 const getDeals = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start, data } =
+  const { filters, search, sort, limit, select, count, start, data, populate } =
     req.query;
 
   const filtersObj = filters
@@ -66,7 +66,8 @@ const getDeals = asyncHandler(async (req, res) => {
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
-      .skip(start || 0);
+      .skip(start || 0)
+      .populate(populate);
   };
 
   let deals;
@@ -101,7 +102,8 @@ const getDeals = asyncHandler(async (req, res) => {
         limit,
         select,
         sortObj,
-        start
+        start,
+        populate
       )
     );
   }

@@ -3,7 +3,7 @@ const Deal_Model = require("../models/Deal_Model");
 const asyncHandler = require("express-async-handler");
 
 const getActivities = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start, data } =
+  const { filters, search, sort, limit, select, count, start, data, populate } =
     req.query;
 
   const filtersObj = filters
@@ -25,7 +25,8 @@ const getActivities = asyncHandler(async (req, res) => {
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
-      .skip(start || 0);
+      .skip(start || 0)
+      .populate(populate);
   };
 
   let activities;
@@ -60,7 +61,8 @@ const getActivities = asyncHandler(async (req, res) => {
         limit,
         select,
         sortObj,
-        start
+        start,
+        populate
       )
     );
   }
