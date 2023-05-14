@@ -116,12 +116,13 @@ const deleteStage = asyncHandler(async (req, res) => {
 
   res.status(200).json({ message: "Stage Has Been Deleted" });
 });
+
 const updateStage = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { name } = req.body;
-  await Stage_Model.findByIdAndUpdate(id, { name });
-  res.status(200).json({ message: "Stage Has Been Deleted" });
+  await Stage_Model.findByIdAndUpdate(id, req.body);
+  res.status(200).json({ message: "Stage Has Been Updated" });
 });
+
 const reorderStages = asyncHandler(async (req, res) => {
   const { pipelineId } = req.params;
   const { stageId, newPosition } = req.body;

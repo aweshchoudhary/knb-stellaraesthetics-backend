@@ -5,53 +5,79 @@ const asyncHandler = require("express-async-handler");
 // NOTES CONTROLLERS
 
 const getNotes = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start, data } =
+  const { filters, search, sort, limit, select, count, start, data, populate } =
     req.query;
+
+  const filtersObj = filters
+    ? JSON.parse(filters).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.value }),
+        {}
+      )
+    : {};
+  const sortObj = sort
+    ? JSON.parse(sort).reduce(
+        (obj, item) => ({ ...obj, [item.id]: item.desc ? "desc" : "asc" }),
+        {}
+      )
+    : {};
+
+  const buildQuery = (model, filtersObj, limit, select, sortObj, start) => {
+    return model
+      .find(filtersObj)
+      .limit(limit || 25)
+      .select(select)
+      .sort(sortObj)
+      .skip(start || 0)
+      .populate(populate);
+  };
 
   let notes;
   let total = 0;
-  let sortObj;
-  let filtersObj = {};
 
-  if (filters) {
-    const filtersArr = JSON.parse(filters);
-    filtersArr.forEach((item) => {
-      filtersObj = {
-        ...filtersObj,
-        [item.id]: item.value,
-      };
-    });
-  }
-  if (sort) {
-    const sortArr = JSON.parse(sort);
-    sortArr.forEach((item) => {
-      sortObj = {
-        ...sortObj,
-        [item.id]: item.desc ? "desc" : "asc",
-      };
-    });
-  }
+  const queries = [];
+
   if (data) {
-    notes = await Note_Model.find(filtersObj)
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      buildQuery(Note_Model, filtersObj, limit, select, sortObj, start)
+    );
   }
+
   if (count) {
-    total = await Note_Model.count(filtersObj)
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      Note_Model.countDocuments(filtersObj)
+        .limit(limit || 25)
+        .select(select)
+        .sort(sortObj)
+        .skip(start || 0)
+        .then((count) => {
+          total = count;
+        })
+    );
   }
+
   if (search) {
-    notes = await Note_Model.find({ $text: { $search: search } })
-      .limit(limit || 25)
-      .select(select)
-      .sort(sortObj)
-      .skip(start || 0);
+    queries.push(
+      buildQuery(
+        Deal_Model,
+        { $text: { $search: search } },
+        limit,
+        select,
+        sortObj,
+        start,
+        populate
+      )
+    );
   }
+
+  await Promise.all(queries)
+    .then((results) => {
+      if (data) {
+        [notes] = results;
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
   res.status(200).json({ data: notes, meta: { total } });
 });
 

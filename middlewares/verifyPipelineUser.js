@@ -1,8 +1,6 @@
 const Pipeline_Model = require("../models/Pipeline_Model");
 
 const verifyUser = async (pipelineId, userId) => {
-  if (!pipelineId || !userId) return { pipelineId: false, userRole: false };
-
   const pipeline = await Pipeline_Model.findOne({
     _id: pipelineId,
     $or: [{ owner: userId }, { assignees: { $in: userId } }],

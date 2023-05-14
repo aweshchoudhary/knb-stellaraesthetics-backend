@@ -30,7 +30,7 @@ const Activity_Schema = new mongoose.Schema(
     involved_users: [
       { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
     ],
-    completed_on: Date,
+    completed_on: { type: Date, required: true, default: null },
   },
   { timestamps: true }
 );

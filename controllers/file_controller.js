@@ -5,18 +5,19 @@ const path = require("path");
 
 const getAllFileInfo = asyncHandler(async (req, res) => {
   const { cardId } = req.params;
-  const fileInfos = await File_Model.find({ cardId });
+  const { populate } = req.query;
+
+  const fileInfos = await File_Model.find({ cardId }).populate(populate);
   res.status(200).json({ data: fileInfos });
 });
 const addFile = asyncHandler(async (req, res) => {
-  const { cardId } = req.body;
   const { filename, path, size, mimetype } = req.file;
   const newFile = new File_Model({
     name: filename,
     type: mimetype,
     url: path,
     size,
-    cardId,
+    ...req.body,
   });
   const fileInfo = await newFile.save();
   res
