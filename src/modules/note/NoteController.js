@@ -1,4 +1,5 @@
-const { NoteModel, DealModel } = require("../models");
+const NoteModel = require("./NoteModel");
+const DealModel = require("../deal/DealModel");
 const asyncHandler = require("express-async-handler");
 
 // NOTES CONTROLLERS

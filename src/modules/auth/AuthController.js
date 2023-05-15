@@ -1,6 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const { hashSync, compareSync } = require("bcryptjs");
-const { UserModel } = require("../models");
+const UserModel = require("../user/UserModel");
 const jwt = require("jsonwebtoken");
 
 const accessTokenCookieOptions = {

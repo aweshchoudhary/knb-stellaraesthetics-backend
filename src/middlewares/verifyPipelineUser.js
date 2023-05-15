@@ -1,4 +1,4 @@
-const { PipelineModel } = require("../modules/models");
+const PipelineModel = require("../modules/pipeline/PipelineModel");
 
 const verifyUser = async (pipelineId, userId) => {
   const pipeline = await PipelineModel.findOne({

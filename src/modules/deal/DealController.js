@@ -1,4 +1,7 @@
-const { DealModel, PipelineModel, StageModel } = require("../models");
+const DealModel = require("./DealModel");
+const PipelineModel = require("../pipeline/PipelineModel");
+const StageModel = require("../stage/StageModel");
+
 const asyncHandler = require("express-async-handler");
 
 const {

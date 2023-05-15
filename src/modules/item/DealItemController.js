@@ -1,4 +1,5 @@
-const { DealModel, DealItemModel } = require("../models");
+const DealItemModel = require("./ItemModel");
+const DealModel = require("../deal/DealModel");
 const asyncHandler = require("express-async-handler");
 
 const createProduct_Service = asyncHandler(async (req, res) => {

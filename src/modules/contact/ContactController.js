@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { ContactModel } = require("../models");
+const ContactModel = require("./ContactModel");
 
 const createContact = asyncHandler(async (req, res) => {
   const newContact = new ContactModel({ ...req.body });

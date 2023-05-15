@@ -1,11 +1,10 @@
-const {
-  PipelineModel,
-  StageModel,
-  DealModel,
-  FileModel,
-  ActivityModel,
-  NoteModel,
-} = require("../modules/models");
+const PipelineModel = require("../modules/pipeline/PipelineModel");
+const StageModel = require("../modules/stage/StageModel");
+const DealModel = require("../modules/deal/DealModel");
+const FileModel = require("../modules/file/FileModel");
+const ActivityModel = require("../modules/activity/ActivityModel");
+const NoteModel = require("../modules/note/NoteModel");
+
 const fs = require("fs");
 
 async function deletePipeline(id) {

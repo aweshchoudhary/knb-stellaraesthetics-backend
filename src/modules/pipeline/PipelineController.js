@@ -1,5 +1,5 @@
 const AsyncHandler = require("express-async-handler");
-const { PipelineModel } = require("../models");
+const PipelineModel = require("./PipelineModel");
 const { deletePipeline } = require("../../helper/DeleteHelper");
 const verifyPipelineUser = require("../../middlewares/verifyPipelineUser");
 

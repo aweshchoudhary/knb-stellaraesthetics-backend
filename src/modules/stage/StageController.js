@@ -1,5 +1,5 @@
 const { deleteDeals } = require("../../helper/DeleteHelper");
-const { StageModel } = require("../models");
+const StageModel = require("./StageModel");
 const asyncHandler = require("express-async-handler");
 
 // Stage Functions

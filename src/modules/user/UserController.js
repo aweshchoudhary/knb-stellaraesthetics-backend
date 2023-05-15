@@ -1,4 +1,4 @@
-const { UserModel } = require("../models");
+const UserModel = require("./UserModel");
 const asyncHandler = require("express-async-handler");
 
 const getMe = asyncHandler(async (req, res) => {

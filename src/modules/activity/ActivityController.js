@@ -1,4 +1,5 @@
-const { ActivityModel, DealModel } = require("../models");
+const ActivityModel = require("./ActivityModel");
+const DealModel = require("../deal/DealModel");
 const asyncHandler = require("express-async-handler");
 
 const getActivities = asyncHandler(async (req, res) => {

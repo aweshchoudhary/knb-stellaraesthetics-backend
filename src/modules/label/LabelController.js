@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { LabelModel } = require("../models");
+const LabelModel = require("./LabelModel");
 
 const createLabel = asyncHandler(async (req, res) => {
   const newLabel = new LabelModel({ ...req.body });

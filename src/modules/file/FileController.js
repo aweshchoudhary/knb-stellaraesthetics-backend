@@ -1,5 +1,5 @@
 const asyncHandler = require("express-async-handler");
-const { FileModel } = require("../models");
+const FileModel = require("./FileModel");
 const fs = require("fs");
 const path = require("path");
 
