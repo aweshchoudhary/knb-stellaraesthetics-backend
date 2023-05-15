@@ -6,7 +6,7 @@ const Image_Schema = new mongoose.Schema({
   path: String,
 });
 
-const Product_Service_Schema = new mongoose.Schema({
+const ItemSchema = new mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   image: Image_Schema,
@@ -22,11 +22,8 @@ const Product_Service_Schema = new mongoose.Schema({
   },
 });
 
-Product_Service_Schema.index({});
+ItemSchema.index({});
 
-const Product_Service_Model = mongoose.model(
-  "ProductService",
-  Product_Service_Schema
-);
+const ItemModel = mongoose.model("Item", ItemSchema);
 
-module.exports = Product_Service_Model;
+module.exports = ItemModel;

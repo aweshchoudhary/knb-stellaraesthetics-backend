@@ -2,10 +2,10 @@ const asyncHandler = require("express-async-handler");
 const ItemModel = require("./ItemModel");
 const fs = require("fs");
 
-const createProduct_Service = asyncHandler(async (req, res) => {
+const createItem = asyncHandler(async (req, res) => {
   if (req.file) {
     const { filename, path, size } = req.file;
-    const newProduct_Service = new ItemModel({
+    const newItem = new ItemModel({
       ...req.body,
       image: {
         name: filename,
@@ -13,28 +13,28 @@ const createProduct_Service = asyncHandler(async (req, res) => {
         size,
       },
     });
-    const product_service = await newProduct_Service.save();
+    const product_service = await newItem.save();
     return res.status(200).json({
-      message: "Product_Service has been created",
+      message: "Item has been created",
       data: product_service,
     });
   } else {
-    const newProduct_Service = new ItemModel({ ...req.body });
-    const product_service = await newProduct_Service.save();
+    const newItem = new ItemModel({ ...req.body });
+    const product_service = await newItem.save();
     res.status(200).json({
-      message: "Product_Service has been created",
+      message: "Item has been created",
       data: product_service,
     });
   }
 });
-const getProduct_Services = asyncHandler(async (req, res) => {
+const getItems = asyncHandler(async (req, res) => {
   const product_services = await ItemModel.find({});
   res.status(200).json({
-    message: "Product_Service has been created",
+    message: "Item has been created",
     data: product_services,
   });
 });
-const getProduct_ServiceById = asyncHandler(async (req, res) => {
+const getItemById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { select, populate } = req.query;
 
@@ -56,16 +56,16 @@ const getProduct_ServiceById = asyncHandler(async (req, res) => {
 
   res.status(200).json({ success: true, data: product_service });
 });
-const updateProduct_Service = asyncHandler(async (req, res) => {
+const updateItem = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (req.body.image && req.file) {
   }
   await ItemModel.findByIdAndUpdate(id, {
     ...req.body,
   });
-  res.status(200).json({ message: "Product_Service has been updated" });
+  res.status(200).json({ message: "Item has been updated" });
 });
-const deleteProduct_Service = asyncHandler(async (req, res) => {
+const deleteItem = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const product_service = await ItemModel.findById(id);
@@ -79,19 +79,17 @@ const deleteProduct_Service = asyncHandler(async (req, res) => {
       fs.unlink(path, async () => {
         await product_service.deleteOne();
       });
-    return res
-      .status(200)
-      .json({ message: "Product_Service has been deleted" });
+    return res.status(200).json({ message: "Item has been deleted" });
   }
 
   await product_service.deleteOne();
-  res.status(200).json({ message: "Product_Service has been deleted" });
+  res.status(200).json({ message: "Item has been deleted" });
 });
 
 module.exports = {
-  createProduct_Service,
-  getProduct_Services,
-  getProduct_ServiceById,
-  updateProduct_Service,
-  deleteProduct_Service,
+  createItem,
+  getItems,
+  getItemById,
+  updateItem,
+  deleteItem,
 };

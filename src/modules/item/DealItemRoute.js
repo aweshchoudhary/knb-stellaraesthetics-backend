@@ -1,17 +1,17 @@
 const router = require("express").Router();
 const {
-  createProduct_Service,
-  getProduct_ServiceById,
-  getProducts_Services,
-  deleteProduct_Service,
-  updateProduct_Service,
+  createDealItem,
+  getDealItemById,
+  getDealItems,
+  deleteDealItem,
+  updateDealItem,
 } = require("./DealItemController");
 
 // ACTIVITY ENDPOINTS
-router.post("/create", createProduct_Service);
-router.get("/get-product-service/:id", getProduct_ServiceById);
-router.get("/get-products-services", getProducts_Services);
-router.put("/update/:id", updateProduct_Service);
-router.delete("/delete/:id", deleteProduct_Service);
+router.post("/create", createDealItem);
+router.get("/get-deal-item/:id", getDealItemById);
+router.get("/get-deal-items", getDealItems);
+router.put("/update/:id", updateDealItem);
+router.delete("/delete/:id", deleteDealItem);
 
 module.exports = router;

@@ -16,6 +16,7 @@ const File_Schema = new mongoose.Schema(
     ],
     sent_to_users: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     dealId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Deal" }],
+    contactId: [{ type: mongoose.Schema.Types.ObjectId, ref: "Contact" }],
   },
   { timestamps: true }
 );

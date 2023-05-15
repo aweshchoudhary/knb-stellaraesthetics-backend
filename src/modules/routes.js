@@ -59,12 +59,12 @@ function Routes(app) {
     UserRoute
   );
   app.use(
-    "/api/product-service",
+    "/api/item",
     passportJWT.authenticate("jwt", { session: false }),
     ItemRoute
   );
   app.use(
-    "/api/deal-product-service",
+    "/api/deal-item",
     passportJWT.authenticate("jwt", { session: false }),
     DealItemRoute
   );

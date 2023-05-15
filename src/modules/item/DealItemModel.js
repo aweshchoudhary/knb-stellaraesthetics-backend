@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const Deal_Product_Service = new mongoose.Schema({
-  productServiceId: {
+const DealItemSchema = new mongoose.Schema({
+  itemId: {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
-    ref: "ProductService",
+    ref: "Item",
   },
   dealId: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Deal" },
   rate: { type: Number, required: true },
@@ -16,9 +16,6 @@ const Deal_Product_Service = new mongoose.Schema({
   currency: { type: String, required: true },
 });
 
-const Product_Service_Inter_Model = mongoose.model(
-  "DealProductService",
-  Deal_Product_Service
-);
+const DealItemModel = mongoose.model("DealItem", DealItemSchema);
 
-module.exports = Product_Service_Inter_Model;
+module.exports = DealItemModel;

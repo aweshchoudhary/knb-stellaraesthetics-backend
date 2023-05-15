@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const getAllFileInfo = asyncHandler(async (req, res) => {
-  const { filters, search, sort, limit, select, count, start, data } =
+  const { filters, search, sort, limit, select, count, start, data, populate } =
     req.query;
 
   const filtersObj = filters
@@ -26,7 +26,8 @@ const getAllFileInfo = asyncHandler(async (req, res) => {
       .limit(limit || 25)
       .select(select)
       .sort(sortObj)
-      .skip(start || 0);
+      .skip(start || 0)
+      .populate(populate);
   };
 
   let files;
@@ -36,7 +37,7 @@ const getAllFileInfo = asyncHandler(async (req, res) => {
 
   if (data) {
     queries.push(
-      buildQuery(FileModel, filtersObj, limit, select, sortObj, start)
+      buildQuery(FileModel, filtersObj, limit, select, sortObj, start, populate)
     );
   }
 
@@ -61,7 +62,8 @@ const getAllFileInfo = asyncHandler(async (req, res) => {
         limit,
         select,
         sortObj,
-        start
+        start,
+        populate
       )
     );
   }

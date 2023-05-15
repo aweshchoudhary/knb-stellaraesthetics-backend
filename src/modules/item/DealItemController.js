@@ -1,8 +1,8 @@
-const DealItemModel = require("./ItemModel");
+const DealItemModel = require("./DealItemModel");
 const DealModel = require("../deal/DealModel");
 const asyncHandler = require("express-async-handler");
 
-const createProduct_Service = asyncHandler(async (req, res) => {
+const createDealItem = asyncHandler(async (req, res) => {
   const newProduct_Service = new DealItemModel({ ...req.body });
   const product_service = await newProduct_Service.save();
   await DealModel.findByIdAndUpdate(req.body.dealId, {
@@ -15,7 +15,7 @@ const createProduct_Service = asyncHandler(async (req, res) => {
   });
 });
 
-const getProducts_Services = asyncHandler(async (req, res) => {
+const getDealItems = asyncHandler(async (req, res) => {
   const { filters, search, sort, limit, select, count, start, data } =
     req.query;
 
@@ -94,7 +94,7 @@ const getProducts_Services = asyncHandler(async (req, res) => {
   });
 });
 
-const getProduct_ServiceById = asyncHandler(async (req, res) => {
+const getDealItemById = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { select, populate } = req.query;
 
@@ -115,7 +115,7 @@ const getProduct_ServiceById = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, data: item });
 });
 
-const updateProduct_Service = asyncHandler(async (req, res) => {
+const updateDealItem = asyncHandler(async (req, res) => {
   const { id } = req.params;
   if (req.body.image && req.file) {
   }
@@ -125,7 +125,7 @@ const updateProduct_Service = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "Product_Service has been updated" });
 });
 
-const deleteProduct_Service = asyncHandler(async (req, res) => {
+const deleteDealItem = asyncHandler(async (req, res) => {
   const { id } = req.params;
 
   const product_service = await Product_Service_Model.findById(id);
@@ -149,9 +149,9 @@ const deleteProduct_Service = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
-  createProduct_Service,
-  getProducts_Services,
-  getProduct_ServiceById,
-  deleteProduct_Service,
-  updateProduct_Service,
+  createDealItem,
+  getDealItems,
+  getDealItemById,
+  deleteDealItem,
+  updateDealItem,
 };
