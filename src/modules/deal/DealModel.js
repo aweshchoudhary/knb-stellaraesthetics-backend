@@ -26,7 +26,7 @@ const Deal_Schema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
-        ref: "DealProductService",
+        ref: "DealItem",
       },
     ],
     notes: [

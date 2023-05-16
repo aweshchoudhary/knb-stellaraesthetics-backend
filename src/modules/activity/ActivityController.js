@@ -121,6 +121,7 @@ const addActivity = asyncHandler(async (req, res) => {
 });
 const updateActivity = asyncHandler(async (req, res) => {
   const { id } = req.params;
+
   await ActivityModel.findByIdAndUpdate(id, {
     ...req.body,
   });
