@@ -5,8 +5,7 @@ const verifyUser = async (pipelineId, userId) => {
     _id: pipelineId,
     $or: [{ owner: userId }, { assignees: { $in: userId } }],
   }).select("_id owner");
-  console.log(pipelineId);
-  console.log(userId);
+
   if (!pipeline) {
     return { pipelineId: false, userRole: false };
   }

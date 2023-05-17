@@ -1,6 +1,7 @@
 const ActivityModel = require("./ActivityModel");
 const DealModel = require("../deal/DealModel");
 const asyncHandler = require("express-async-handler");
+const verifyActivityUser = require("../../middlewares/verifyActivityUser");
 
 const getActivities = asyncHandler(async (req, res) => {
   const { filters, search, sort, limit, select, count, start, data, populate } =
@@ -18,7 +19,6 @@ const getActivities = asyncHandler(async (req, res) => {
         {}
       )
     : {};
-
   const buildQuery = (model, filtersObj, limit, select, sortObj, start) => {
     return model
       .find(filtersObj)
@@ -101,7 +101,6 @@ const getActivityById = asyncHandler(async (req, res) => {
 
   res.status(200).json({ success: true, data: activity });
 });
-
 const addActivity = asyncHandler(async (req, res) => {
   const data = req.body;
   const newActivity = new ActivityModel({
@@ -127,7 +126,6 @@ const updateActivity = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ message: "Activity has been updated" });
 });
-
 const deleteActivity = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const activity = await ActivityModel.findById(id);
